@@ -1,0 +1,216 @@
+# نقشه صفر تا صد و وضعیت اجرا
+
+مرجع وضعیت این فایل و مرجع شواهد [EXECUTION.md](./EXECUTION.md) است. تاریخ مبنا: ۲۰۲۶-۱۰-۳۰. زمان‌بندی تقویمی تعیین نشده. تکمیل مستندات به معنی تکمیل برنامه نیست.
+
+## ماشین وضعیت
+
+| State | معنی | شرط خروج |
+| --- | --- | --- |
+| TODO | هنوز پیش‌نیاز آماده نیست | رفع وابستگی |
+| READY | پیش‌نیاز و معیار پذیرش آماده | شروع واقعی |
+| IN_PROGRESS | در حال اجرا | خروجی قابل بررسی یا مانع مشخص |
+| REVIEW | نیازمند نظر یا بازبینی مشخص | ثبت نظر؛ سکوت تأیید نیست |
+| VERIFYING | بررسی معیار پذیرش | evidence موفق یا اصلاح |
+| BLOCKED | مانع مشخص با شناسه پرسش/خطا | ثبت رفع مانع و برگشت READY |
+| DONE | معیار پذیرش با شواهد پاس شده | بازگشایی فقط با دلیل |
+
+مسیر معمول: TODO → READY → IN_PROGRESS → VERIFYING → DONE. در صورت نیاز به نظر، IN_PROGRESS → REVIEW → IN_PROGRESS/VERIFYING. خطای تست از VERIFYING به IN_PROGRESS برمی‌گردد. کار فعال با مانع مستند به BLOCKED می‌رود؛ اطلاعات آینده مانع کار مستقل نیست. هر task یک state دارد؛ phase فقط با اتمام همه taskهای اجباری DONE می‌شود. تغییر وضعیت و بازگشایی در EXECUTION ثبت شود. قابلیت خارج از دامنه به‌دروغ DONE نشود. این سند دستور استفاده از sub-agent نیست.
+
+## نمای مراحل
+
+| مرحله | موضوع | وابستگی | State | شرط پایان |
+| --- | --- | --- | --- | --- |
+| R00 | مستندات و قراردادها | ندارد | DONE | فایل‌ها و لینک‌ها معتبر |
+| R01 | پایه پروژه | R00 | DONE | build و صفحه دو زبان، config معتبر |
+| R02 | هویت و طراحی | R01 | READY | UI قابل بررسی در دو تم/جهت |
+| R03 | داده و migration | R01 | READY | schema و constraints تست‌شده |
+| R04 | حساب و دسترسی | R02، R03 | TODO | ورود و مجوز معتبر |
+| R05 | کاتالوگ و مدیریت | R02، R03، R04 | TODO | مدیریت/نمایش محصول چندزبانه |
+| R06 | سبد و checkout اولیه | R04، R05 | TODO | quote معتبر سروری |
+| R07 | سفارش و پرداخت | R06 | TODO | خرید idempotent بدون oversell |
+| R08 | ارسال و عملیات مدیر | R07 | TODO | گردش سفارش و job قابل ردگیری |
+| R09 | هوش مصنوعی | R05، R08 | TODO | ابزار امن، بودجه و fallback |
+| R10 | محتوا و کیفیت | R08، R09 | TODO | شواهد کیفیت و داده واقعی |
+| R11 | تولید و انتشار | R10 | TODO | restore، smoke و انتشار مجاز |
+| R12 | توسعه و نگهداری | R11 | TODO | چرخه مستمر پس از انتشار |
+
+## R00 — مستندات
+
+| Task | کار | State |
+| --- | --- | --- |
+| R00-T01 | ثبت تصمیم‌های محصول و هویت مرکزی | DONE |
+| R00-T02 | تفکیک اسناد تخصصی | DONE |
+| R00-T03 | state machine، وابستگی و شرط پایان | DONE |
+| R00-T04 | کنترل فایل، لینک و شناسه‌ها و ثبت نتیجه | DONE |
+
+پایان: همه نام‌های درخواست‌شده موجود، مرجع داده مشخص، لینک سالم و state معتبر. این بررسی تأیید runtime نیست.
+
+## R01 — پایه پروژه
+
+| Task | کار | State |
+| --- | --- | --- |
+| R01-T01 | بررسی رسمی نسخه‌ها و تثبیت Node/pnpm/lockfile | DONE |
+| R01-T02 | Next.js، strict TS، lint/format و scripts واقعی | DONE |
+| R01-T03 | parser و validation و تولید config از BUSINESS_CONFIG | DONE |
+| R01-T04 | env schema، نمونه امن و تفکیک محیط تست | DONE |
+| R01-T05 | next-intl، /fa و /en و lang/dir | DONE |
+| R01-T06 | QueryClient جدا و TanStack Query/error boundary | DONE |
+| R01-T07 | CI اولیه، typecheck و production build | DONE |
+
+پایان: build موفق، دو مسیر زبان، کنترل locale نامعتبر، انعکاس تغییر برند از فایل مرکزی، رد config خراب و نبود secret در client. انتخاب کتابخانه auth تا پایان این مرحله ثبت شود.
+
+## R02 — طراحی و هویت
+
+| Task | کار | State |
+| --- | --- | --- |
+| R02-T01 | پیشنهاد لوگو، رنگ، فونت مجاز و بنر | READY |
+| R02-T02 | tokenها، shadcn و روشن/تاریک/سیستم | TODO |
+| R02-T03 | header/navigation/footer و shell موبایل | TODO |
+| R02-T04 | فرم/dialog و حالت‌های loading/empty/error | TODO |
+| R02-T05 | نمونه خانه و محصول برای نظر مالک | TODO |
+| R02-T06 | اصلاح نظر و QA دو جهت، keyboard و contrast | TODO |
+
+پایان: خروجی واقعی قابل تعامل و اصلاح‌شده، focus و منوی موبایل کارا، overflow و flash تم بررسی‌شده. OI-04 به دستیار سپرده شده؛ نظر مالک روی خروجی ملموس گرفته شود.
+
+## R03 — دیتابیس
+
+| Task | کار | State |
+| --- | --- | --- |
+| R03-T01 | schema دسته، ویژگی، ترجمه و variant | READY |
+| R03-T02 | schema حساب، سبد، سفارش، پرداخت و انبار | TODO |
+| R03-T03 | constraints/index و strategy رقابت/تراکنش | TODO |
+| R03-T04 | migration و seed دمو جدا | TODO |
+| R03-T05 | integration test با PostgreSQL و query plan پایه | TODO |
+
+پایان: ساخت دیتابیس خالی با migration و seed تکرارپذیر؛ SKU/slug/variant تکراری و داده نامعتبر رد شوند. rollback کد از schema تفکیک شود.
+
+## R04 — حساب و مجوز
+
+| Task | کار | State |
+| --- | --- | --- |
+| R04-T01 | ثبت‌نام، ورود/خروج و session امن | TODO |
+| R04-T02 | تأیید ایمیل و بازیابی با سرویس واقعی/تست | TODO |
+| R04-T03 | bootstrap امن مالک و permission | TODO |
+| R04-T04 | rate limit، CSRF، revocation و ownership test | TODO |
+| R04-T05 | UI حساب و session منقضی در fa/en | TODO |
+
+پایان: مشتری دسترسی مدیر ندارد؛ token یک‌بارمصرف و expiry تست؛ خروج cache خصوصی را پاک کند. OI-13 و ایمیل OI-14 در زمان اتصال لازم‌اند؛ اتصال فاقد سرویس واقعی DONE نیست.
+
+## R05 — کاتالوگ و پنل
+
+| Task | کار | State |
+| --- | --- | --- |
+| R05-T01 | مدیریت دسته، ویژگی، برند محصول و ترجمه | TODO |
+| R05-T02 | محصول/variant، قیمت/موجودی و انتشار | TODO |
+| R05-T03 | upload امن، storage، گالری و alt محلی | TODO |
+| R05-T04 | فهرست، فیلتر URL، search و pagination | TODO |
+| R05-T05 | جزئیات، انتخاب variant و مقایسه | TODO |
+| R05-T06 | SEO محلی، redirect slug و invalidation | TODO |
+
+پایان: محصول از پنل ساخته و در دو زبان نمایش یابد؛ draft عمومی نباشد، فیلتر نوع‌دار و cache صحیح باشند. storage به OI-14 وابسته است.
+
+## R06 — سبد و checkout اولیه
+
+| Task | کار | State |
+| --- | --- | --- |
+| R06-T01 | تصمیم خرید مهمان/ورود و merge امن سبد | TODO |
+| R06-T02 | سبد و mutations با ownership و حد تعداد | TODO |
+| R06-T03 | آدرس ایران و پروفایل | TODO |
+| R06-T04 | quote قیمت/تخفیف/ارسال و conflict UI | TODO |
+| R06-T05 | checkout قابل دسترس با حفظ ورودی در خطا | TODO |
+
+پایان: قیمت مرورگر بی‌اثر، تغییر موجودی/قیمت درست نمایش داده شود. OI-10 لازم؛ quote نهایی به OI-09/OI-11 وابسته است. quote رزرو نیست.
+
+## R07 — موجودی، سفارش و پرداخت
+
+| Task | کار | State |
+| --- | --- | --- |
+| R07-T01 | جدول transition/guard و قواعد کوپن/رزرو | TODO |
+| R07-T02 | snapshot سفارش و رزرو اتمیک | TODO |
+| R07-T03 | adapter درگاه و ایجاد پرداخت idempotent | TODO |
+| R07-T04 | callback، verify و تطابق مبلغ/reference | TODO |
+| R07-T05 | expiry/retry، callback دیررس و reconciliation | TODO |
+| R07-T06 | صفحه نتیجه و تست رقابت/شکست شبکه | TODO |
+
+پایان: رقابت آخرین کالا بدون oversell، callback تکراری بدون اثر دوم، پرداخت مبهم قابل رسیدگی. sandbox واقعی بررسی شود؛ mock کافی نیست. OI-09/OI-11/OI-12 برای اتصال لازم‌اند.
+
+## R08 — ارسال و عملیات
+
+| Task | کار | State |
+| --- | --- | --- |
+| R08-T01 | سفارش‌های مشتری و پنل | TODO |
+| R08-T02 | آماده‌سازی، tracking و transition ارسال | TODO |
+| R08-T03 | لغو، مرجوعی و refund طبق سیاست/provider | TODO |
+| R08-T04 | outbox/job بادوام، retry و اعلان | TODO |
+| R08-T05 | audit و تست permission/transition | TODO |
+
+پایان: عملیات و اعلان بدون اثر تکراری و قابل ردگیری؛ مشتری فقط سفارش خود را ببیند. refund بدون تأیید provider موفق اعلام نشود.
+
+## R09 — هوش مصنوعی
+
+| Task | کار | State |
+| --- | --- | --- |
+| R09-T01 | provider adapter، کلید امن و تست اتصال | TODO |
+| R09-T02 | budget/rate/token limit، log امن و fallback | TODO |
+| R09-T03 | دستیار خرید با کاتالوگ/سیاست واقعی | TODO |
+| R09-T04 | ابزار سفارش با session و مالکیت | TODO |
+| R09-T05 | پیش‌نویس fa/en، job گروهی progress/cancel | TODO |
+| R09-T06 | preview و تأیید یک‌بارمصرف تغییر حساس | TODO |
+| R09-T07 | تست injection، نشت، تأیید تغییرکرده و budget | TODO |
+
+پایان: OI-15 تعیین، هزینه enforce، ابزار غیرمجاز رد و قطع AI بدون اختلال خرید. وجود کلید به‌تنهایی اثبات قابلیت نیست.
+
+## R10 — محتوا و کیفیت
+
+| Task | کار | State |
+| --- | --- | --- |
+| R10-T01 | کاتالوگ/عکس واقعی، مجوز و ترجمه کامل | TODO |
+| R10-T02 | تماس، ارسال، مرجوعی، privacy و شرایط مصوب | TODO |
+| R10-T03 | metadata/hreflang/sitemap/robots/schema | TODO |
+| R10-T04 | performance build تولید و بهینه‌سازی | TODO |
+| R10-T05 | accessibility دستی/خودکار، دو زبان/تم/موبایل | TODO |
+| R10-T06 | security review، threat model و خرید E2E | TODO |
+| R10-T07 | رفع blocker انتشار و ثبت ریسک‌های باقی‌مانده | TODO |
+
+پایان: evidence طبق QUALITY ثبت، موارد بحرانی رفع، دمو از فروش واقعی جدا و OI-07/OI-08/OI-11/OI-16 تکمیل. نمره آزمایشگاهی جای field CWV نیست.
+
+## R11 — تولید و انتشار
+
+| Task | کار | State |
+| --- | --- | --- |
+| R11-T01 | hosting/region، secrets و staging مستقل | TODO |
+| R11-T02 | دامنه/TLS، migration سازگار و artifact برگشت | TODO |
+| R11-T03 | backup، restore drill و RPO/RTO مصوب | TODO |
+| R11-T04 | monitoring، alert، health و runbook | TODO |
+| R11-T05 | staging smoke، callback/email/storage و readiness | TODO |
+| R11-T06 | انتشار با مجوز جاری و smoke تولید | TODO |
+| R11-T07 | تحویل راهنما، سرویس‌ها و مسائل باز | TODO |
+
+پایان: OI-06/OI-14/OI-17 تکمیل، restore واقعاً تست، تراکنش کنترل‌شده و پایش تأیید. secrets در گزارش نباشند. rollback کد با schema سازگار؛ migration مخرب کورکورانه برنگردد.
+
+## R12 — پس از انتشار
+
+| Task | کار | State |
+| --- | --- | --- |
+| R12-T01 | baseline میدانی CWV/error/conversion و اصلاح | TODO |
+| R12-T02 | OTP و اتصال امن حساب پس از OI-18 | TODO |
+| R12-T03 | زبان جدید پس از OI-19، ترجمه و QA | TODO |
+| R12-T04 | علاقه‌مندی/نظرات در صورت فعال شدن دامنه | TODO |
+| R12-T05 | بررسی دوره‌ای dependency/retention/restore/AI cost | TODO |
+| R12-T06 | search/cache پیشرفته با bottleneck واقعی | TODO |
+
+هر توسعه معیار پایان جدا دارد. R12 چرخه نگهداری است و با انتشار اولیه DONE نمی‌شود. قابلیت اختیاری تا تصمیم فعال‌سازی TODO می‌ماند. کیفیت، امنیت و چندزبانگی پایه به این مرحله موکول نمی‌شوند.
+
+
+
+
+
+## آخرین تحویل
+
+R01 با شواهد ثبت‌شده در EXECUTION تکمیل شد: check و build، ۱۶ تست واحد و ۵ تست مرورگر پاس. لوگو و پالت تأییدشده در صفحه پایه استفاده شدند؛ R02-T01 هنوز فونت، بنر و جزئیات هویت را نیاز دارد. سرویس تجاری یا انتشار انجام نشده و ارزیابی نهایی performance/SEO/AA مربوط به مراحل بعد است.
+
+
+
+## اصلاح R01-FIX-001 — ThemeProvider
+
+DONE. R01-T06 و R01-T07 برای بازتولید خطای script در dev بازگشایی شدند؛ پس از رفع رندر inline script، حفظ تم در navigation و اضافه شدن تست dev دوباره DONE شدند. آخرین شواهد: check/۱۶ تست واحد، build، ۸ تست dev و ۸ تست production پاس. ثبت اولیه ۵ تست مرورگر مربوط به تحویل قبلی است؛ تست‌های تازه console.error را نیز می‌گیرند. تست‌ها سرور شخصی 3000 را reuse نمی‌کنند. این اصلاح مرحله جدیدی از طراحی را آغاز نکرده است.

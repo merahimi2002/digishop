@@ -1,0 +1,14 @@
+packages:
+  - .
+engineStrict: true
+saveExact: true
+autoInstallPeers: false
+allowBuilds:
+  esbuild: true
+  sharp: true
+  '@tailwindcss/oxide': true
+  '@parcel/watcher': true
+  '@swc/core': true
+  unrs-resolver: true
+minimumReleaseAgeExclude:
+  - lucide-react@1.65.0

@@ -1,0 +1,25 @@
+# امنیت
+
+وضعیت: الزامات طراحی؛ کنترل‌ها هنوز پیاده‌سازی یا ارزیابی نشده‌اند. مدل تهدید در [THREAT_MODEL.md](./THREAT_MODEL.md) و معیار آزمون در [TESTING.md](./TESTING.md) است.
+
+## کنترل‌های لازم
+
+- validation سرور، query پارامتری/ORM، escape خروجی، sanitize HTML غنی، و منع اجرای محتوای کاربر.
+- کنترل session، CSRF، role/permission و ownership در تمام endpointها، Server Actions و ابزارهای AI.
+- secure cookies، TLS، CSP و headerهای مناسب؛ استثنای CSP فقط با دلیل و دامنه مشخص سرویس.
+- محدودیت نرخ توزیع‌شده در محیط چند instance، اندازه بدنه، upload، timeout و concurrency.
+- upload دارای intent کوتاه‌عمر، بررسی نوع واقعی و اندازه، scope bucket، عدم اجرای فایل و سیاست SVG؛ فایل تأییدنشده منتشر نشود.
+- جلوگیری از SSRF در AI_BASE_URL، دریافت تصویر یا URL بیرونی: دسترسی مدیر به تنظیم به‌تنهایی کافی نیست؛ مقصد، redirect و شبکه خصوصی/metadata محدود شوند.
+- secrets فقط server-side، least privilege، رمزنگاری credentialهای ذخیره‌شده و مسیر rotation با کلید جدا.
+- درگاه با verify مستقل، تطابق مبلغ/reference و idempotency؛ callback بدون اعتماد به query مرورگر.
+- audit عملیات حساس با actor و payload پالایش‌شده؛ حذف یا تغییر audit توسط مدیر عادی مجاز نباشد.
+- dependency/secret scan و تست permission در CI؛ audit خودکار جای review را نمی‌گیرد.
+
+## AI
+
+ورودی مشتری، متن محصول، فایل و خروجی مدل غیرقابل اعتمادند. مدل permission تعیین نمی‌کند؛ ابزار با session واقعی و schema محدود اجرا می‌شود. ابزار SQL/shell آزاد و URL دلخواه وجود ندارد. تأیید مدیر به actor، عملیات، payload، زمان و nonce متصل و یک‌بارمصرف باشد. بودجه و حد مصرف سمت سرور enforce شوند.
+
+## رسیدگی
+
+آسیب‌پذیری با دامنه اثر، روش بازتولید بدون secret و شدت ثبت شود. ضعف بحرانی auth، پرداخت یا نشت اطلاعات پیش از انتشار رفع شود. در حادثه، ابتدا مهار، سپس حفظ evidence پالایش‌شده، rotation/رفع، آزمون مجدد و گزارش رخداد. هیچ تست تهاجمی روی سرویس ثالث بدون مجوز انجام نشود.
+

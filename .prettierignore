@@ -1,0 +1,15 @@
+node_modules
+.next
+.next-e2e-dev
+.tools
+.pnpm-store
+tmp
+doc
+pnpm-lock.yaml
+src/config/generated
+src/app/brand.generated.css
+public/brand
+next-env.d.ts
+playwright-report
+test-results
+output

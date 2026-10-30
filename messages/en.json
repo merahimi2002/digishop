@@ -1,0 +1,35 @@
+{
+  "Home": {
+    "title": "A better shopping experience starts here",
+    "description": "A store taking shape, with thoughtful design, informed choices, and care in every detail.",
+    "eyebrow": "A fresh beginning",
+    "phase": "Building the foundations",
+    "note": "This is an early project preview. Shopping and payments are not available yet.",
+    "identity": "Simple identity. A seamless experience.",
+    "identityDescription": "From language and layout to colors and our mark, every detail is designed to feel connected.",
+    "cardLanguage": "Two languages. One experience.",
+    "cardLanguageText": "Persian and English, with a layout that feels natural in each language.",
+    "cardTheme": "Light or dark. Your choice.",
+    "cardThemeText": "Our navy and green palette adapts to both sides of your day.",
+    "cardNext": "More details, next",
+    "cardNextText": "The storefront design and product browsing experience come in the next stage.",
+    "footer": "Thoughtfully, one step at a time."
+  },
+  "Common": {
+    "skip": "Skip to main content",
+    "language": "Choose language",
+    "theme": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "Use device setting",
+    "home": "Home",
+    "retry": "Try again",
+    "loading": "Getting things ready…"
+  },
+  "Errors": {
+    "title": "This section could not load",
+    "description": "Please try again. If the problem continues, come back in a moment.",
+    "notFoundTitle": "We could not find this page",
+    "notFoundDescription": "The address may have changed. You can return to the home page."
+  }
+}

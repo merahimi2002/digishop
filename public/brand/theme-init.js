@@ -1,0 +1,2 @@
+/* Generated from doc/BUSINESS_CONFIG.md. */
+(function initializeTheme(defaultTheme){let theme=defaultTheme;try{const saved=localStorage.getItem("theme");if(saved==="light"||saved==="dark"||saved==="system")theme=saved}catch{}const resolved=theme==="system"?matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light":theme;const root=document.documentElement;root.dataset.themePreference=theme;root.classList.remove("light","dark");root.classList.add(resolved);root.style.colorScheme=resolved})("system");

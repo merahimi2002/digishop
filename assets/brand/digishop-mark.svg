@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="100 180 1060 920" fill="none" role="img" aria-label="Digishop">
+  <style>
+    .logo-base { fill: var(--logo-base, #0b1f3a); }
+    .logo-accent { fill: var(--logo-accent, #0f766e); }
+    @media (prefers-color-scheme: dark) {
+      .logo-base { fill: var(--logo-base, #edf2f7); }
+      .logo-accent { fill: var(--logo-accent, #2dd4bf); }
+    }
+    [data-theme="light"] .logo-base { fill: var(--logo-base, #0b1f3a); }
+    [data-theme="light"] .logo-accent { fill: var(--logo-accent, #0f766e); }
+    [data-theme="dark"] .logo-base { fill: var(--logo-base, #edf2f7); }
+    [data-theme="dark"] .logo-accent { fill: var(--logo-accent, #2dd4bf); }
+  </style>
+  <path class="logo-base" d="M180 230H310C367 230 407 261 429 307H684C787 307 868 362 907 445H771C746 426 719 416 684 416H452V680C395 703 352 735 321 779V356C321 322 299 300 268 300H180C160 300 144 284 144 265S160 230 180 230Z"/>
+  <path class="logo-base" d="M452 817H638C711 817 758 795 795 756H914C877 866 775 933 638 933H348C341 933 335 930 332 925L452 817Z"/>
+  <path class="logo-base" d="M670 568H829C829 598 849 620 888 620H933C1037 620 1116 697 1116 799C1116 901 1037 981 935 981H758C736 981 727 966 743 951L843 867H930C962 867 987 839 987 806C987 772 962 745 929 745H712C615 745 550 683 550 610L670 568Z"/>
+  <path class="logo-accent" d="M1116 570H690C623 570 573 614 573 667C573 687 579 705 590 720C553 695 533 654 533 610C533 523 613 451 709 451H995C1061 451 1116 503 1116 570Z"/>
+  <path class="logo-accent" d="M452 689V817L338 929C327 919 320 889 320 848C320 778 373 724 452 689Z"/>
+  <circle class="logo-base" cx="477" cy="1004" r="56"/>
+  <circle class="logo-base" cx="672" cy="1004" r="56"/>
+</svg>
