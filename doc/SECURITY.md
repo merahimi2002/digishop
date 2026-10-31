@@ -23,3 +23,10 @@
 
 آسیب‌پذیری با دامنه اثر، روش بازتولید بدون secret و شدت ثبت شود. ضعف بحرانی auth، پرداخت یا نشت اطلاعات پیش از انتشار رفع شود. در حادثه، ابتدا مهار، سپس حفظ evidence پالایش‌شده، rotation/رفع، آزمون مجدد و گزارش رخداد. هیچ تست تهاجمی روی سرویس ثالث بدون مجوز انجام نشود.
 
+
+
+## مرز داده در R03
+
+client سروری و lazy، app-role غیرمالک و فاقد CREATE، عدم دسترسی app به _prisma_migrations، owner مجزا، PostgreSQL لوپ‌بک با SCRAM و credential تصادفی محلی بررسی شدند. UUID جای authorization نیست؛ مجوز row/object و rate limit به R04/R05/R07 وابسته‌اند. ledgerهای AuditEvent/InventoryMovement با trigger از UPDATE/DELETE عادی محافظت می‌شوند. Verification فقط hash و guest cart فقط hash ذخیره می‌کند. Error validation شامل URI یا مقدار secret نیست؛ logging خطای DB در endpoint آینده باید همچنان sanitize شود.
+
+تست‌ها روی *_test و نقش‌های جدا اجرا می‌شوند؛ نام DB تنها guard کمکی است. Compose/CI password fixtureهای عمومی توسعه دارند، نه credential واقعی. shadow باید جدا باشد؛ migration/reset تولید بدون backup و برنامه expand/contract مجاز نشده. هیچ policy انتشار واقعی در این مرحله اجرا نشده است.

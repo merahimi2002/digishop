@@ -23,8 +23,8 @@
 | R00 | مستندات و قراردادها | ندارد | DONE | فایل‌ها و لینک‌ها معتبر |
 | R01 | پایه پروژه | R00 | DONE | build و صفحه دو زبان، config معتبر |
 | R02 | هویت و طراحی | R01 | DONE | UI قابل بررسی در دو تم/جهت |
-| R03 | داده و migration | R01 | READY | schema و constraints تست‌شده |
-| R04 | حساب و دسترسی | R02، R03 | TODO | ورود و مجوز معتبر |
+| R03 | داده و migration | R01 | DONE | schema و constraints تست‌شده |
+| R04 | حساب و دسترسی | R02، R03 | READY | ورود و مجوز معتبر |
 | R05 | کاتالوگ و مدیریت | R02، R03، R04 | TODO | مدیریت/نمایش محصول چندزبانه |
 | R06 | سبد و checkout اولیه | R04، R05 | TODO | quote معتبر سروری |
 | R07 | سفارش و پرداخت | R06 | TODO | خرید idempotent بدون oversell |
@@ -76,11 +76,11 @@
 
 | Task | کار | State |
 | --- | --- | --- |
-| R03-T01 | schema دسته، ویژگی، ترجمه و variant | READY |
-| R03-T02 | schema حساب، سبد، سفارش، پرداخت و انبار | TODO |
-| R03-T03 | constraints/index و strategy رقابت/تراکنش | TODO |
-| R03-T04 | migration و seed دمو جدا | TODO |
-| R03-T05 | integration test با PostgreSQL و query plan پایه | TODO |
+| R03-T01 | schema دسته، ویژگی، ترجمه و variant | DONE |
+| R03-T02 | schema حساب، سبد، سفارش، پرداخت و انبار | DONE |
+| R03-T03 | constraints/index و strategy رقابت/تراکنش | DONE |
+| R03-T04 | migration و seed دمو جدا | DONE |
+| R03-T05 | integration test با PostgreSQL و query plan پایه | DONE |
 
 پایان: ساخت دیتابیس خالی با migration و seed تکرارپذیر؛ SKU/slug/variant تکراری و داده نامعتبر رد شوند. rollback کد از schema تفکیک شود.
 
@@ -88,7 +88,7 @@
 
 | Task | کار | State |
 | --- | --- | --- |
-| R04-T01 | ثبت‌نام، ورود/خروج و session امن | TODO |
+| R04-T01 | ثبت‌نام، ورود/خروج و session امن | READY |
 | R04-T02 | تأیید ایمیل و بازیابی با سرویس واقعی/تست | TODO |
 | R04-T03 | bootstrap امن مالک و permission | TODO |
 | R04-T04 | rate limit، CSRF، revocation و ownership test | TODO |
@@ -256,3 +256,8 @@ R02 همچنان REVIEW است؛ تأیید ظاهری مالک و کار روی
 ## پذیرش R02 — ۲۰۲۶/۱۰/۳۱
 
 مالک نسخه نهایی UI/موشن را تأیید و commit/push را مجاز کرد. R02 و T05/T06 از REVIEW به DONE رفتند. شواهد check/build/QA در EXECUTION و UI_REVIEW ثبت‌اند؛ عبارات REVIEW قبلی گزارش تاریخی پیش از پذیرش‌اند. مرحله بعد R03 مطابق جدول داده است. تأیید طراحی به معنی انتشار production یا اتمام commerce نیست.
+
+
+## پایان R03 — ۲۰۲۶/۱۰/۳۱
+
+R03 از READY به IN_PROGRESS/VERIFYING و پس از شواهد به DONE رسید؛ T01 تا T05 DONE هستند. ۴۱ مدل، دو migration، seed opt-in تکرارپذیر، app/owner جدا، ۲۰ integration، rebuild از صفر و query plan پایه پاس شدند. R04 و T01 آن READY هستند؛ ورود، اتصال عمومی کاتالوگ، checkout یا پرداخت واقعی در این تحویل انجام نشده است. اجرای Docker محلی و workflow جدید CI هنوز تأیید نشده‌اند؛ مسیر محلی PostgreSQL واقعی بررسی شده. جزئیات و حدود در DATABASE و EXECUTION.

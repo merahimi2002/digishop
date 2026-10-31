@@ -25,3 +25,10 @@ log ساختاریافته شامل requestId، operation، نتیجه و زما
 
 وظایف تکرارشونده: آزادسازی رزرو منقضی، reconciliation پرداخت، پاک‌سازی توکن منقضی و فایل orphan، اجرای retention، بررسی آسیب‌پذیری و تست restore. همه jobها idempotent و قابل مشاهده باشند. حذف داده مالی یا replay پرداخت با فرمان دستی بدون بررسی انجام نشود.
 
+
+
+## عملیات محلی R03
+
+cluster پروژه در .tools/postgres/data روی 127.0.0.1:55432 است؛ db:up/db:down آن را شروع/متوقف می‌کنند و down داده را پاک نمی‌کند. db:migrate و db:status با owner، برنامه با DATABASE_URL غیرمالک کار می‌کند. بعد از migration جدید در local، db:grant:local را اجرا کنید. مسیر Docker آماده اما در این دستگاه اجرا نشده است.
+
+بکاپ/restore تولید، HA، monitoring و worker هنوز شواهد عملیاتی ندارند. آزمون rebuild محلی از DB خالی موفق است ولی جای restore بکاپ داده واقعی نیست. تغییر ناسازگار از مسیر expand/contract و migration جدید؛ عقب بردن کد تضمین rollback schema نیست.

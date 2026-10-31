@@ -54,3 +54,8 @@ ROADMAP مرجع وضعیت task و EXECUTION مرجع شواهد و تصمیم�
 
 
 گزارش بازبینی طراحی و انیمیشن با مهارت‌های نصب‌شده: [UI_REVIEW.md](./UI_REVIEW.md).
+
+
+## داده R03
+
+PostgreSQL 18.6 و Prisma 7.10.1، ۴۱ مدل، دو migration و seed صریح draft آماده‌اند. شروع از [DATABASE.md](./DATABASE.md)؛ فرمان test:db تست‌های واقعی constraint/رقابت/permission/query-plan را روی دیتابیس جدا اجرا می‌کند. public UI هنوز همان پیش‌نمایش R02 است؛ اتصال کاتالوگ تجاری و auth در مراحل بعدند. clone تازه با build/typecheck client را تولید می‌کند؛ فایل‌های env، باینری و داده محلی commit نمی‌شوند.

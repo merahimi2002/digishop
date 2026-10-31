@@ -70,3 +70,12 @@ $env:PLAYWRIGHT_CHANNEL = 'msedge'
 Next dev فایل AGENTS.md ریشه را خودکار ایجاد می‌کند که به راهنماهای همراه همین نسخه Next اشاره دارد؛ آن بلوک را حذف نکنید. مستندات محصول و اجرا همچنان در doc هستند.
 
 از ROADMAP task آماده را انتخاب و evidence را در EXECUTION ثبت کنید. داده نمونه از تولید جداست؛ اتصال پرداخت/ایمیل/AI را بدون اجرای واقعی موفق معرفی نکنید. تست متناسب با تغییر کافی است؛ در شکست واقعی اصلاح و تکرار کنید.
+
+
+## دیتابیس R03
+
+راهنمای کامل portable ویندوز و Docker در [DATABASE.md](./DATABASE.md) است. مسیر اجراشده: PostgreSQL 18.6 روی 127.0.0.1:55432، دیتابیس local و *_test مجزا، app و owner جدا. شروع/توقف با db:up و db:down؛ db:setup:local فقط bootstrap portable و تولید env gitignored است. db:grant:local از URLهای محیط محلی استفاده می‌کند و روی Docker هم قابل استفاده است.
+
+فرمان‌ها: db:generate، db:validate، db:format، db:migrate، db:migrate:test، db:status، db:seed و test:db. build/typecheck خودشان client را تولید می‌کنند. test:db قبل از اتصال مقصد، هم‌محل بودن app/owner، متفاوت بودن نقش‌ها و suffix *_test را بررسی می‌کند، migration را روی همان تست اجرا و DML برنامه را provision می‌کند. به محیط تولید متصل نکنید؛ نام تست guard کمکی است، جداسازی credential/زیرساخت همچنان لازم است.
+
+تغییر schema باید migration جدید داشته باشد؛ db push/reset یا تغییر فایل migration اعمال‌شده استفاده نشود. Shadow مستقل برای migrate dev/diff لازم است. generated client، native binaries، cluster و env واقعی در Git نیستند.

@@ -91,3 +91,10 @@ GSAP 3.15.0 و @gsap/react 2.1.2 از registry رسمی بررسی، exact نص�
 
 
 Lenis 1.3.27 برای درخواست صریح اسکرول نرم نصب و exact lock شد. اتصال ticker مشترک، cleanup و reduced-motion در UI ثبت است. [مرجع رسمی](https://github.com/darkroomengineering/lenis).
+
+
+## نسخه‌های نصب‌شده R03 — ۲۰۲۶/۱۰/۳۱
+
+Prisma CLI، @prisma/client و @prisma/adapter-pg همگی 7.10.1؛ pg و @types/pg برابر 8.23.1؛ @next/env با Next برابر 16.4.3، exact و lock شده‌اند. registry کامل بررسی شد: latest Prisma برابر 8.0.0-rc.29 است و آخرین نسخه بدون prerelease برابر 7.10.1؛ RC جای stable نصب نشد. PostgreSQL واقعی 18.6 با postgres --version تأیید شد؛ image جایگزین و CI نیز 18.6 است.
+
+خروجی prisma-client در src/generated/prisma است؛ PrismaPg و pool driver استفاده می‌شوند، URL در prisma.config.ts و env است. برنامه همان Node 26.13.0/TS7 را حفظ کرده و generate، migration، adapter، build و تست واقعی پاس‌اند. allowBuilds فقط برای prisma و @prisma/engines اضافه شد؛ سیاست بررسی install scriptها دور زده نشد. Beta-label transport باینری محلی، dependency برنامه نیست؛ جزئیات و provenance در DATABASE است.

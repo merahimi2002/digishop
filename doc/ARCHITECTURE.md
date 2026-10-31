@@ -142,3 +142,10 @@ OTP بعداً با شماره نرمال‌شده، کد دارای انقضا�
 concept-products.ts مرجع موقت سه محصول مفهومی است؛ دیتابیس یا قیمت/موجودی واقعی ندارد. dynamicParams=false و generateStaticParams مسیرهای شناخته‌شده را تعریف می‌کنند. proxy نیز محصول ناشناخته را پیش از streaming با status 404 به صفحه ناموجود هدایت داخلی می‌کند تا soft-404 رخ ندهد. در R05، قرارداد catalog واقعی باید جای lookup ثابت در صفحه و proxy را بگیرد؛ این محدودیت سه‌محصولی دائمی نیست.
 
 StorefrontMotion در انتهای هر main قرار دارد و بعد از hydration scope همان صفحه را با GSAP تغییر می‌دهد؛ layout مشترک انیمیشن محتوای هنوز hydrate نشده را اجرا نمی‌کند.
+
+
+## لایه داده اجرایی R03
+
+prisma/schema.prisma و migrations مرجع فیزیکی داده‌اند؛ factory اتصال برای CLI/integration و client.ts با server-only و getDatabase lazy برای کد سرور است. QueryClient کلاینت هیچ connection string دریافت نمی‌کند. pool هر process حداکثر ۱۰ اتصال دارد؛ ظرفیت کل استقرار باید با تعداد instanceها سنجیده شود.
+
+inventory.ts primitive داخلی UPDATE شرطی و transaction برای reserve/release است؛ caller/cart/order authorization و quote در R06/R07 اضافه می‌شوند. UI فعلاً concept-products را می‌خواند؛ اتصال آن به DB در R05 و بعد از R04 انجام می‌شود. schema auth وجود دارد ولی Better Auth/ورود هنوز فعال نیستند. تنظیمات، محدودیت‌های SQL و مسیر migration در DATABASE ثبت‌اند.

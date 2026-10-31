@@ -1,7 +1,9 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
   "plugins": ["typescript", "react", "jsx-a11y", "nextjs", "import"],
-  "categories": { "correctness": "error" },
+  "categories": {
+    "correctness": "error"
+  },
   "rules": {
     "typescript/no-explicit-any": "error",
     "react/rules-of-hooks": "error",
@@ -18,6 +20,7 @@
     "src/config/generated/**",
     "next-env.d.ts",
     "playwright-report/**",
-    "test-results/**"
+    "test-results/**",
+    "src/generated/prisma/**"
   ]
 }

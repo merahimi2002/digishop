@@ -205,3 +205,29 @@ UI/موشن با حفظ هویت و عرض ۹۰٪ اصلاح شد؛ شرح کا�
 
 
 پذیرش نهایی ۲۰۲۶/۱۰/۳۱: مالک نسخه بازبینی‌شده را تأیید کرد. R02 اکنون DONE است و وضعیت REVIEW بالاتر مربوط به پیش از پذیرش است. commit/push همین خروجی مجاز شد؛ شروع R03 نیز مجاز است.
+
+
+## پذیرش/انتشار R02 و اجرای R03 — ۲۰۲۶/۱۰/۳۱
+
+مالک R02 را پذیرفت و push را صریحاً خواست. commit 1767a14 با عنوان feat(storefront): complete approved R02 bilingual design and motion روی origin/main در https://github.com/merahimi2002/digishop push شد؛ fetch پیش از آن اختلاف ۰/۰ داشت و force push انجام نشد. R02 DONE است.
+
+R03 طبق مجوز مالک اجرا شد. Prisma/Client/Adapter همگی stable 7.10.1 هستند؛ latest=8.0.0-rc.29 عمداً انتخاب نشد. pg و types نسخه 8.23.1، PostgreSQL واقعی 18.6. native Prisma scripts با allowBuilds مشخص فعال شدند؛ هیچ security check، typecheck یا peer conflict مخفی نشد. Node 26 و TS7 حفظ و واقعاً بررسی شدند.
+
+Docker/psql سراسری موجود نبود؛ EDB پاسخ 403 منطقه‌ای داد. payload بومی stable با transport/npm و integrity SHA-512 در .tools نصب شد، بدون helper beta در dependency برنامه یا سرویس ویندوز. cluster فقط لوپ‌بک 55432، database local/test/shadow مجزا و نقش admin bootstrap/owner/app جدا. credentialهای تصادفی در env و tools gitignored باقی‌اند؛ app مجوز DDL و خواندن تاریخچه migration ندارد.
+
+خروجی: ۴۱ مدل، Prisma config و client سروری lazy، دو migration immutable تاریخچه‌دار، قیدهای SQL/trigger/index، seed صریح سه کالای DRAFT بدون حساب کاربری، primitive داخلی reserve/release، Compose و CI آماده. DATABASE/ENVIRONMENT/DEVELOPMENT/ARCHITECTURE/AUTH/SECURITY/OPERATIONS/TECH_STACK/TESTING/README و ROADMAP همگام شدند.
+
+شواهد:
+
+- schema format/validate و generate: PASS.
+- migration deploy و status برای local/test: PASS، schema up-to-date.
+- migrate diff از تاریخچه به DB با shadow مستقل: No difference detected.
+- seed محلی دو بار: PASS؛ ۳ Product/Variant آزمایشی، بدون کاربر و بدون publish/reset موجودی.
+- pnpm check: PASS؛ env، ۱۰۲ پیام/ICU در هر زبان، Oxlint، tsc7، ۱۸ unit و Prettier.
+- test:db: ۲۰/۲۰ PASS روی PostgreSQL واقعی، نه mock/SQLite؛ شامل FK/unique/check، canonical combination در commit، نوع/scope ویژگی، hash/identity، BigInt و overflow، snapshot، append-only، idempotency و rollback.
+- ۲۰ درخواست رزرو روی stock=3: دقیقاً ۳ موفق؛ ۱۰ release رقابتی یک رزرو: دقیقاً یک تغییر.
+- SQL plan با ۲۰۰۰ ترجمه: index locale/slug انتخاب شد؛ output/r03/query-plan.json بدون خاموش کردن seqscan.
+- دیتابیس کاملاً خالی با نام تصادفی *_test در cluster محلی ساخته شد؛ هر دو migration و seed/۲۰ تست پاس شدند؛ فقط همان دیتابیس موقت پس از disconnect حذف شد. local و test اصلی حفظ شدند.
+- pnpm build و suite مرورگر production: PASS، ۲۳/۲۳؛ خطای Theme/locale/UI برنگشت. تغییرات پس از آن مربوط به ابزار DB/env/docs و تست‌های داده بوده‌اند.
+
+R03 DONE، R04 READY. account schema به معنی auth واقعی یا Better Auth adapter تأییدشده نیست؛ Verification hash و role mapping در R04 باید هماهنگ شوند. Primitive انبار مجوز/quote/binding cart-order ندارد و checkout واقعی در R06/R07 است. backup/restore تولید، PostgreSQL مدیریت‌شده، Docker محلی و اجرای ابری workflow جدید هنوز تأیید نشده‌اند. تغییرات R03 فعلاً در workspace هستند؛ push انجام‌شده مربوط به R02 تأییدشده بود.

@@ -4,6 +4,8 @@ engineStrict: true
 saveExact: true
 autoInstallPeers: false
 allowBuilds:
+  prisma: true
+  '@prisma/engines': true
   esbuild: true
   sharp: true
   '@tailwindcss/oxide': true

@@ -15,7 +15,10 @@ export const envSchema = z
     APP_ENV: z.enum(['local', 'test', 'preview', 'production']).default('local'),
     APP_ORIGIN: z.url().default('http://localhost:3000'),
     AUTH_ENABLED: flag,
+    DEMO_SEED_ENABLED: flag,
     DATABASE_URL: optionalUrl,
+    DIRECT_DATABASE_URL: optionalUrl,
+    SHADOW_DATABASE_URL: optionalUrl,
     BETTER_AUTH_SECRET: optionalText,
     CONFIG_ENCRYPTION_KEY: optionalText,
     AI_ENABLED: flag,
@@ -26,6 +29,42 @@ export const envSchema = z
   .superRefine((env, context) => {
     const missing = (key: string) =>
       context.addIssue({ code: 'custom', path: [key], message: 'Required for enabled feature' });
+    for (const key of ['DATABASE_URL', 'DIRECT_DATABASE_URL', 'SHADOW_DATABASE_URL'] as const) {
+      const value = env[key];
+      if (
+        value &&
+        URL.canParse(value) &&
+        !['postgres:', 'postgresql:'].includes(new URL(value).protocol)
+      )
+        context.addIssue({ code: 'custom', path: [key], message: 'PostgreSQL URL required' });
+      if (
+        env.APP_ENV === 'test' &&
+        value &&
+        URL.canParse(value) &&
+        !new URL(value).pathname.toLowerCase().endsWith('_test')
+      )
+        context.addIssue({
+          code: 'custom',
+          path: [key],
+          message: 'Test database name must end with _test',
+        });
+    }
+    if (
+      env.SHADOW_DATABASE_URL &&
+      [env.DATABASE_URL, env.DIRECT_DATABASE_URL].some(
+        (value) =>
+          value &&
+          URL.canParse(value) &&
+          URL.canParse(env.SHADOW_DATABASE_URL!) &&
+          new URL(value).host === new URL(env.SHADOW_DATABASE_URL!).host &&
+          new URL(value).pathname === new URL(env.SHADOW_DATABASE_URL!).pathname,
+      )
+    )
+      context.addIssue({
+        code: 'custom',
+        path: ['SHADOW_DATABASE_URL'],
+        message: 'Shadow database must be separate',
+      });
     if (env.AUTH_ENABLED) {
       if (!env.DATABASE_URL) missing('DATABASE_URL');
       if (!env.BETTER_AUTH_SECRET || env.BETTER_AUTH_SECRET.length < 32)
@@ -37,16 +76,6 @@ export const envSchema = z
     }
     if (env.APP_ENV === 'production' && !env.APP_ORIGIN.startsWith('https://'))
       missing('APP_ORIGIN');
-    if (
-      env.APP_ENV === 'test' &&
-      env.DATABASE_URL &&
-      !new URL(env.DATABASE_URL).pathname.toLowerCase().includes('test')
-    )
-      context.addIssue({
-        code: 'custom',
-        path: ['DATABASE_URL'],
-        message: 'Test database name must explicitly contain test',
-      });
   });
 
 export function validateEnvironment(input: Record<string, string | undefined>) {

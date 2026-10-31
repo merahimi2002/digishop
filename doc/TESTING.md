@@ -84,3 +84,12 @@ R02 همچنان REVIEW است؛ محصول‌ها مفهومی‌اند و قا
 UI/موشن با حفظ هویت و عرض ۹۰٪ اصلاح شد؛ شرح کامل در [UI_REVIEW.md](./UI_REVIEW.md). build و check پاس؛ ۱۶ unit، suite production با ۲۳ تست و regressionهای dev پاس شدند. پس از اصلاح نهایی منوی زبان، دو تست polish در هر دو حالت دوباره پاس شدند. snapshotهای before/after از production در ۱۴۴۰/۷۶۸/۳۹۰ ثبت و بررسی شدند. inspector با سه استثنای مستند برای منوی واقعی/کالای عکس‌دار/border مورد درخواست مالک: ۰ FAIL و ۴ WARN قابل دفاع. source-lint سلیقه‌ای مهارت هنوز برای CSS قدیمی و قراردادهای حفظ‌شده finding دارد؛ نتیجه کامل در گزارش موجود است.
 
 معیارهای تازه: متن تبلت خارج از محدوده عکس، یک CTA در هیرو، aria-current صحیح در صفحات مستقل و محصولات، و dropdown زبان داخل قاب موبایل RTL/LTR. خطای React یا assertion با force click/exclude مخفی نشد. R02 همچنان REVIEW است؛ gate خودکار معادل تأیید ظاهر مالک، screen-reader یا CWV میدانی نیست.
+
+
+## ماتریس R03
+
+test:db در vitest.integration.config.ts از unit جداست؛ قبل از migration، APP_ENV=test، هر دو URL با suffix _test، یک host/database و دو نقش متفاوت را الزام می‌کند. سپس migration و app grants را اجرا می‌کند. ۲۰ تست integration شامل SKU/slug/variant تکراری، deferred combination، FK بین محصولات، نوع/scope ویژگی، حلقه دسته، نرمال‌سازی حساب/hash، مبلغ/تعداد نامعتبر، BigInt بالای MAX_SAFE_INTEGER و overflow، مبلغ و snapshot پرداخت، append-only ledger، idempotency، رقابت ۲۰ رزرو برای ۳ موجودی، آزادسازی فقط یک بار و rollback است. seed دوباره users یا رکورد تکراری نمی‌سازد.
+
+EXPLAIN ANALYZE/BUFFERS روی ۲۰۰۰ ترجمه index locale/slug را بدون خاموش کردن seqscan انتخاب کرد؛ output/r03/query-plan.json gitignored است. داده SQL تست داخل rollback یا fixtureهای *_test می‌ماند. بازسازی کامل از DB خالی موقت نیز جدا بررسی شده است. CI service PostgreSQL 18.6 و test:db اضافه شد؛ اجرای cloud بعدی هنوز تأیید نشده و Docker محلی در دسترس این دستگاه نبود.
+
+unit suite فعلی ۱۸ تست؛ regression مرورگر production ۲۳ تست همچنان پاس است. این شواهد نه تأیید گردش checkout/payment واقعی است و نه benchmark تولید.

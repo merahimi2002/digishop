@@ -2,6 +2,24 @@ import { describe, expect, it } from 'vitest';
 import { validateEnvironment } from '../../src/config/env-schema';
 
 describe('environment validation', () => {
+  it('accepts only PostgreSQL and guards the owner test URL too', () => {
+    expect(() => validateEnvironment({ DATABASE_URL: 'https://example.test/db' })).toThrow(
+      'PostgreSQL',
+    );
+    expect(() =>
+      validateEnvironment({ APP_ENV: 'test', DIRECT_DATABASE_URL: 'postgresql://localhost/live' }),
+    ).toThrow('Test database');
+  });
+  it('never reflects malformed database secrets', () => {
+    const secret = 'private-db-secret';
+    try {
+      validateEnvironment({ DATABASE_URL: 'postgresql://user:' + secret + '@[' });
+    } catch (error) {
+      expect(String(error)).not.toContain(secret);
+      return;
+    }
+    throw new Error('Expected invalid URL rejection');
+  });
   it('starts the foundation without optional service credentials', () => {
     expect(validateEnvironment({}).AUTH_ENABLED).toBe(false);
   });

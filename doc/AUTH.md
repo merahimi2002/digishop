@@ -27,3 +27,8 @@ session قابل ابطال، کوکی HttpOnly و Secure تولید، SameSite 
 
 شماره با قالب واحد نرمال شود؛ کد تصادفی امن، هش‌شده، دارای انقضا، حداکثر تلاش و cooldown. شماره به user ID پایدار متصل شود. اتصال حساب ایمیل و موبایل نیازمند اثبات مالکیت است؛ شباهت اطلاعات یا پیام AI مجوز ادغام حساب نیست. اتصال پیامک و تصمیم‌های بازیابی قبل از فعال شدن بررسی شوند.
 
+
+
+## پیش‌نیاز داده R03
+
+User/Session/Account/Verification/Address اکنون در schema و migration هستند؛ ورود، bootstrap مالک و adapter Better Auth هنوز اجرایی نیستند و AUTH_ENABLED=false باقی است. هیچ admin یا password پیش‌فرض seed نشده. roleها enumهای CUSTOMER/ADMIN/OWNER هستند؛ R04 باید mapping و permission را صریح پیاده کند. Verification.value به hash hex ۶۴ کاراکتری محدود شده؛ ذخیره/lookup پیش‌فرض adapter بدون بررسی کافی نیست و R04 باید flow token را با این قرارداد هماهنگ کند. credential/OAuth tokenها نباید بدون حفاظت مناسب و مجوز در فیلدهای nullable آینده ذخیره شوند. OI-13/14 هنگام اتصال واقعی لازم می‌شوند.

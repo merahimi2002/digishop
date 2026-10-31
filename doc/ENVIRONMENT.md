@@ -28,3 +28,10 @@ local، test، preview و production credential و database جدا دارند. `
 
 APP_ENV یکی از local/test/preview/production است و با NODE_ENV (حالت اجرای Next) تفاوت دارد. مقدار پیش‌فرض APP_ORIGIN برابر http://localhost:3000 است؛ در APP_ENV=production باید HTTPS باشد. AUTH_ENABLED و AI_ENABLED پیش‌فرض false هستند. ENV schema فقط feature فعال را ملزم به credential می‌کند. فیلتر نام دیتابیس تست یک guard کمکی است، جایگزین جداسازی credential و زیرساخت نیست. در R01 هیچ اتصال دیتابیس انجام نمی‌شود.
 
+
+
+## قرارداد فعال R03
+
+DATABASE_URL و DIRECT_DATABASE_URL اکنون استفاده می‌شوند: اولی نقش برنامه و دومی migration owner. SHADOW_DATABASE_URL اختیاری ولی مستقل و disposable است و نباید همان host/path دیتابیس برنامه باشد. هر URL دیتابیس باید postgres/postgresql باشد؛ در APP_ENV=test نام آن باید با _test تمام شود. خطاهای validation فقط نام فیلد/پیام را می‌دهند و URI/رمز را بازتاب نمی‌دهند.
+
+DEMO_SEED_ENABLED پیش‌فرض false است؛ تنها APP_ENV=local/test و مقدار true اجازه seed می‌دهند. seed در build/install خودکار اجرا نمی‌شود. نقش‌ها و passwordهای portable توسط db:setup:local به envهای gitignored نوشته می‌شوند؛ مقادیر fixture در Compose و CI صرفاً توسعه/تست‌اند. UI عمومی همچنان بدون DB بالا می‌آید و getDatabase فقط هنگام عملیات سروری اتصال می‌سازد.

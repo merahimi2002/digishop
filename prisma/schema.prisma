@@ -1,0 +1,603 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AttributeKind {
+  TEXT
+  NUMBER
+  BOOLEAN
+  OPTION
+}
+
+enum ReservationStatus {
+  ACTIVE
+  CONSUMED
+  RELEASED
+  EXPIRED
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+  OWNER
+}
+
+enum MediaStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum DiscountKind {
+  FIXED
+  PERCENT
+}
+
+model User {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email         String        @unique @db.VarChar(254)
+  name          String        @db.VarChar(160)
+  emailVerified Boolean       @default(false)
+  image         String?
+  phone         String?       @unique @db.VarChar(20)
+  role          Role          @default(CUSTOMER)
+  createdAt     DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt     DateTime      @default(now()) @updatedAt @db.Timestamptz(3)
+  sessions      Session[]
+  accounts      Account[]
+  addresses     Address[]
+  carts         Cart[]
+  orders        Order[]
+  couponUses    CouponUsage[]
+}
+
+model Session {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  token     String   @unique
+  expiresAt DateTime @db.Timestamptz(3)
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamptz(3)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Account {
+  id                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId                String    @db.Uuid
+  accountId             String
+  providerId            String
+  password              String?
+  accessToken           String?
+  refreshToken          String?
+  idToken               String?
+  accessTokenExpiresAt  DateTime? @db.Timestamptz(3)
+  refreshTokenExpiresAt DateTime? @db.Timestamptz(3)
+  scope                 String?
+  createdAt             DateTime  @default(now()) @db.Timestamptz(3)
+  updatedAt             DateTime  @default(now()) @updatedAt @db.Timestamptz(3)
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, accountId])
+  @@index([userId])
+}
+
+model Verification {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  identifier String
+  value      String
+  expiresAt  DateTime @db.Timestamptz(3)
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  updatedAt  DateTime @default(now()) @updatedAt @db.Timestamptz(3)
+
+  @@index([identifier])
+  @@index([expiresAt])
+}
+
+model Address {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String   @db.Uuid
+  recipient  String
+  phone      String
+  country    String   @db.Char(2)
+  province   String
+  city       String
+  line1      String
+  postalCode String
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Category {
+  id           String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parentId     String?               @db.Uuid
+  code         String                @unique @db.VarChar(80)
+  createdAt    DateTime              @default(now()) @db.Timestamptz(3)
+  parent       Category?             @relation("CategoryTree", fields: [parentId], references: [id], onDelete: Restrict)
+  children     Category[]            @relation("CategoryTree")
+  translations CategoryTranslation[]
+  products     Product[]
+  attributes   CategoryAttribute[]
+
+  @@index([parentId])
+}
+
+model CategoryTranslation {
+  categoryId  String   @db.Uuid
+  locale      String   @db.VarChar(35)
+  name        String   @db.VarChar(160)
+  slug        String   @db.VarChar(180)
+  description String?
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([categoryId, locale])
+  @@unique([locale, slug])
+}
+
+model ProductBrand {
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code         String             @unique @db.VarChar(80)
+  translations BrandTranslation[]
+  products     Product[]
+}
+
+model BrandTranslation {
+  brandId String       @db.Uuid
+  locale  String       @db.VarChar(35)
+  name    String       @db.VarChar(160)
+  brand   ProductBrand @relation(fields: [brandId], references: [id], onDelete: Cascade)
+
+  @@id([brandId, locale])
+}
+
+model Product {
+  id           String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoryId   String                  @db.Uuid
+  brandId      String?                 @db.Uuid
+  status       ProductStatus           @default(DRAFT)
+  isDemo       Boolean                 @default(false)
+  createdAt    DateTime                @default(now()) @db.Timestamptz(3)
+  updatedAt    DateTime                @default(now()) @updatedAt @db.Timestamptz(3)
+  category     Category                @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  brand        ProductBrand?           @relation(fields: [brandId], references: [id], onDelete: Restrict)
+  translations ProductTranslation[]
+  slugHistory  ProductSlugHistory[]
+  variants     Variant[]
+  options      ProductOption[]
+  attributes   ProductAttributeValue[]
+  media        ProductMedia[]
+
+  @@index([categoryId, status, createdAt])
+  @@index([status, createdAt])
+  @@index([brandId], map: "product_brand")
+}
+
+model ProductTranslation {
+  productId      String  @db.Uuid
+  locale         String  @db.VarChar(35)
+  name           String  @db.VarChar(200)
+  slug           String  @db.VarChar(180)
+  description    String?
+  seoTitle       String? @db.VarChar(200)
+  seoDescription String? @db.VarChar(320)
+  product        Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@id([productId, locale])
+  @@unique([locale, slug])
+}
+
+model ProductSlugHistory {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId String   @db.Uuid
+  locale    String   @db.VarChar(35)
+  slug      String   @db.VarChar(180)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([locale, slug])
+  @@index([productId])
+}
+
+model Attribute {
+  id           String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code         String                  @unique @db.VarChar(80)
+  kind         AttributeKind
+  unit         String?                 @db.VarChar(32)
+  translations AttributeTranslation[]
+  categories   CategoryAttribute[]
+  values       ProductAttributeValue[]
+  choices      AttributeChoice[]
+
+  @@unique([id, kind])
+}
+
+model AttributeTranslation {
+  attributeId String    @db.Uuid
+  locale      String    @db.VarChar(35)
+  name        String    @db.VarChar(160)
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+
+  @@id([attributeId, locale])
+}
+
+model CategoryAttribute {
+  categoryId  String    @db.Uuid
+  attributeId String    @db.Uuid
+  required    Boolean   @default(false)
+  filterable  Boolean   @default(true)
+  category    Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Restrict)
+
+  @@id([categoryId, attributeId])
+  @@index([attributeId])
+}
+
+model AttributeChoice {
+  id           String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  attributeId  String                  @db.Uuid
+  code         String                  @db.VarChar(80)
+  attribute    Attribute               @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  translations ChoiceTranslation[]
+  values       ProductAttributeValue[]
+
+  @@unique([attributeId, code])
+  @@unique([id, attributeId])
+}
+
+model ChoiceTranslation {
+  choiceId String          @db.Uuid
+  locale   String          @db.VarChar(35)
+  label    String          @db.VarChar(160)
+  choice   AttributeChoice @relation(fields: [choiceId], references: [id], onDelete: Cascade)
+
+  @@id([choiceId, locale])
+}
+
+model ProductAttributeValue {
+  productId    String           @db.Uuid
+  attributeId  String           @db.Uuid
+  kind         AttributeKind
+  locale       String           @default("*") @db.VarChar(35)
+  textValue    String?
+  numberValue  Decimal?         @db.Decimal(24, 6)
+  booleanValue Boolean?
+  choiceId     String?          @db.Uuid
+  product      Product          @relation(fields: [productId], references: [id], onDelete: Cascade)
+  attribute    Attribute        @relation(fields: [attributeId, kind], references: [id, kind], onDelete: Restrict)
+  choice       AttributeChoice? @relation(fields: [choiceId, attributeId], references: [id, attributeId], onDelete: Restrict)
+
+  @@id([productId, attributeId, locale])
+  @@index([attributeId, numberValue])
+  @@index([attributeId, choiceId])
+}
+
+model ProductOption {
+  id           String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId    String              @db.Uuid
+  code         String              @db.VarChar(80)
+  product      Product             @relation(fields: [productId], references: [id], onDelete: Cascade)
+  translations OptionTranslation[]
+  values       OptionValue[]
+  selections   VariantSelection[]
+
+  @@unique([productId, code])
+  @@unique([id, productId])
+}
+
+model OptionTranslation {
+  optionId String        @db.Uuid
+  locale   String        @db.VarChar(35)
+  name     String        @db.VarChar(160)
+  option   ProductOption @relation(fields: [optionId], references: [id], onDelete: Cascade)
+
+  @@id([optionId, locale])
+}
+
+model OptionValue {
+  id           String                   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  optionId     String                   @db.Uuid
+  code         String                   @db.VarChar(80)
+  option       ProductOption            @relation(fields: [optionId], references: [id], onDelete: Cascade)
+  translations OptionValueTranslation[]
+  selections   VariantSelection[]
+
+  @@unique([optionId, code])
+  @@unique([id, optionId])
+}
+
+model OptionValueTranslation {
+  valueId String      @db.Uuid
+  locale  String      @db.VarChar(35)
+  label   String      @db.VarChar(160)
+  value   OptionValue @relation(fields: [valueId], references: [id], onDelete: Cascade)
+
+  @@id([valueId, locale])
+}
+
+model Variant {
+  id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  productId      String                 @db.Uuid
+  sku            String                 @unique @db.VarChar(80)
+  combinationKey String                 @default("default")
+  priceIrr       BigInt
+  active         Boolean                @default(true)
+  createdAt      DateTime               @default(now()) @db.Timestamptz(3)
+  product        Product                @relation(fields: [productId], references: [id], onDelete: Restrict)
+  selections     VariantSelection[]
+  inventory      Inventory?
+  reservations   InventoryReservation[]
+  movements      InventoryMovement[]
+  cartItems      CartItem[]
+  orderItems     OrderItem[]
+
+  @@unique([productId, combinationKey])
+  @@unique([id, productId])
+}
+
+model VariantSelection {
+  variantId String        @db.Uuid
+  productId String        @db.Uuid
+  optionId  String        @db.Uuid
+  valueId   String        @db.Uuid
+  variant   Variant       @relation(fields: [variantId, productId], references: [id, productId], onDelete: Cascade)
+  option    ProductOption @relation(fields: [optionId, productId], references: [id, productId], onDelete: Restrict)
+  value     OptionValue   @relation(fields: [valueId, optionId], references: [id, optionId], onDelete: Restrict)
+
+  @@id([variantId, optionId])
+  @@index([valueId])
+}
+
+model Media {
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  storageKey   String             @unique
+  mimeType     String
+  byteSize     BigInt
+  width        Int?
+  height       Int?
+  status       MediaStatus        @default(PENDING)
+  createdAt    DateTime           @default(now()) @db.Timestamptz(3)
+  translations MediaTranslation[]
+  products     ProductMedia[]
+}
+
+model MediaTranslation {
+  mediaId String @db.Uuid
+  locale  String @db.VarChar(35)
+  alt     String @db.VarChar(300)
+  media   Media  @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@id([mediaId, locale])
+}
+
+model ProductMedia {
+  productId String  @db.Uuid
+  mediaId   String  @db.Uuid
+  position  Int     @default(0)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media     Media   @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+
+  @@id([productId, mediaId])
+  @@unique([productId, position])
+}
+
+model Inventory {
+  variantId String  @id @db.Uuid
+  onHand    Int     @default(0)
+  reserved  Int     @default(0)
+  version   Int     @default(0)
+  variant   Variant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+}
+
+model InventoryReservation {
+  id        String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  variantId String            @db.Uuid
+  quantity  Int
+  status    ReservationStatus @default(ACTIVE)
+  expiresAt DateTime          @db.Timestamptz(3)
+  createdAt DateTime          @default(now()) @db.Timestamptz(3)
+  variant   Variant           @relation(fields: [variantId], references: [id], onDelete: Restrict)
+
+  @@index([status, expiresAt])
+  @@index([variantId, status])
+}
+
+model InventoryMovement {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  variantId String   @db.Uuid
+  delta     Int
+  reason    String
+  reference String?  @unique
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  variant   Variant  @relation(fields: [variantId], references: [id], onDelete: Restrict)
+
+  @@index([variantId, createdAt])
+}
+
+model Cart {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String?    @db.Uuid
+  guestTokenHash String?    @unique @db.VarChar(64)
+  expiresAt      DateTime?  @db.Timestamptz(3)
+  createdAt      DateTime   @default(now()) @db.Timestamptz(3)
+  updatedAt      DateTime   @default(now()) @updatedAt @db.Timestamptz(3)
+  user           User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items          CartItem[]
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model CartItem {
+  cartId    String  @db.Uuid
+  variantId String  @db.Uuid
+  quantity  Int
+  cart      Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  variant   Variant @relation(fields: [variantId], references: [id], onDelete: Restrict)
+
+  @@id([cartId, variantId])
+  @@index([variantId], map: "cart_item_variant")
+}
+
+model Order {
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  number      String           @unique
+  userId      String?          @db.Uuid
+  status      OrderStatus      @default(PENDING)
+  currency    String           @default("IRR") @db.Char(3)
+  subtotalIrr BigInt
+  discountIrr BigInt           @default(0)
+  shippingIrr BigInt           @default(0)
+  taxIrr      BigInt           @default(0)
+  totalIrr    BigInt
+  createdAt   DateTime         @default(now()) @db.Timestamptz(3)
+  updatedAt   DateTime         @default(now()) @updatedAt @db.Timestamptz(3)
+  user        User?            @relation(fields: [userId], references: [id], onDelete: SetNull)
+  items       OrderItem[]
+  address     OrderAddress?
+  payments    PaymentAttempt[]
+  couponUses  CouponUsage[]
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
+}
+
+model OrderItem {
+  id              String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId         String   @db.Uuid
+  variantId       String?  @db.Uuid
+  skuSnapshot     String
+  nameSnapshot    String
+  optionsSnapshot Json     @default("{}")
+  quantity        Int
+  unitPriceIrr    BigInt
+  totalIrr        BigInt
+  order           Order    @relation(fields: [orderId], references: [id], onDelete: Restrict)
+  variant         Variant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+}
+
+model OrderAddress {
+  orderId    String @id @db.Uuid
+  recipient  String
+  phone      String
+  country    String @db.Char(2)
+  province   String
+  city       String
+  line1      String
+  postalCode String
+  order      Order  @relation(fields: [orderId], references: [id], onDelete: Restrict)
+}
+
+model PaymentAttempt {
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  orderId           String        @db.Uuid
+  provider          String
+  providerReference String?
+  status            PaymentStatus @default(PENDING)
+  amountIrr         BigInt
+  idempotencyKey    String        @unique
+  requestHash       String        @db.VarChar(64)
+  createdAt         DateTime      @default(now()) @db.Timestamptz(3)
+  order             Order         @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@unique([provider, providerReference])
+  @@index([orderId, createdAt])
+}
+
+model Coupon {
+  id         String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code       String        @unique @db.VarChar(80)
+  kind       DiscountKind
+  value      BigInt
+  usageLimit Int
+  usedCount  Int           @default(0)
+  expiresAt  DateTime      @db.Timestamptz(3)
+  uses       CouponUsage[]
+}
+
+model CouponUsage {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  couponId  String   @db.Uuid
+  userId    String   @db.Uuid
+  orderId   String   @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
+  coupon    Coupon   @relation(fields: [couponId], references: [id], onDelete: Restrict)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Restrict)
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Restrict)
+
+  @@unique([couponId, userId])
+  @@unique([couponId, orderId])
+  @@index([userId], map: "coupon_usage_user")
+  @@index([orderId], map: "coupon_usage_order")
+}
+
+model IdempotencyRecord {
+  scope       String
+  key         String
+  requestHash String   @db.VarChar(64)
+  response    Json?
+  expiresAt   DateTime @db.Timestamptz(3)
+
+  @@id([scope, key])
+  @@index([expiresAt])
+}
+
+model AuditEvent {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  actorId       String?  @db.Uuid
+  action        String
+  entityType    String
+  entityId      String
+  correlationId String?
+  metadata      Json     @default("{}")
+  createdAt     DateTime @default(now()) @db.Timestamptz(3)
+
+  @@index([entityType, entityId, createdAt])
+  @@index([actorId, createdAt])
+}
+
+model OutboxEvent {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  topic       String
+  payload     Json
+  attempts    Int       @default(0)
+  availableAt DateTime  @default(now()) @db.Timestamptz(3)
+  processedAt DateTime? @db.Timestamptz(3)
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
+
+  @@index([processedAt, availableAt])
+}
