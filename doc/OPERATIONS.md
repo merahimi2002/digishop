@@ -32,3 +32,7 @@ log ساختاریافته شامل requestId، operation، نتیجه و زما
 cluster پروژه در .tools/postgres/data روی 127.0.0.1:55432 است؛ db:up/db:down آن را شروع/متوقف می‌کنند و down داده را پاک نمی‌کند. db:migrate و db:status با owner، برنامه با DATABASE_URL غیرمالک کار می‌کند. بعد از migration جدید در local، db:grant:local را اجرا کنید. مسیر Docker آماده اما در این دستگاه اجرا نشده است.
 
 بکاپ/restore تولید، HA، monitoring و worker هنوز شواهد عملیاتی ندارند. آزمون rebuild محلی از DB خالی موفق است ولی جای restore بکاپ داده واقعی نیست. تغییر ناسازگار از مسیر expand/contract و migration جدید؛ عقب بردن کد تضمین rollback schema نیست.
+
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+حساب مالک با auth:owner و env خصوصی مدیریت می‌شود، نه seed عمومی. در local لینک‌ها از mailbox خوانده می‌شوند؛ در تولید SMTP واقعی، HTTPS و بررسی تحویل لازم است. پس از استفاده credential اولیه و پیام‌های محلی پاک شوند. sessionها DB-backed و قابل ابطال‌اند؛ غیرفعال‌کردن کاربر مانع دسترسی بعدی می‌شود. تعیین برنامه پاکسازی رکوردهای منقضی، retention و trust proxy پیش از تولید لازم است.

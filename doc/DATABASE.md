@@ -1,10 +1,10 @@
 # قرارداد و راه‌اندازی دیتابیس
 
-وضعیت R03: پیاده‌سازی و بررسی‌شده. PostgreSQL 18.6 منبع داده و Prisma 7.10.1 ORM است؛ فرانت R02 هنوز به کاتالوگ دیتابیس متصل نشده و فروش/ورود واقعی فعال نیستند. شواهد در [EXECUTION.md](./EXECUTION.md).
+وضعیت R03: پیاده‌سازی و بررسی‌شده. PostgreSQL 18.6 منبع داده و Prisma 7.10.1 ORM است؛ فرانت R02 هنوز به کاتالوگ دیتابیس متصل نشده و فروش واقعی فعال نیست؛ ورود محلی در R04 اضافه شده. شواهد در [EXECUTION.md](./EXECUTION.md).
 
 ## ساختار فعلی
 
-۴۱ مدل در `prisma/schema.prisma` و دو migration نسخه‌بندی‌شده:
+۴۲ مدل در `prisma/schema.prisma` و سه migration نسخه‌بندی‌شده:
 
 | حوزه | مدل‌ها و قرارداد |
 | --- | --- |
@@ -98,3 +98,7 @@ seed شامل ۳ Product/Variant آزمایشی، ترجمه fa/en، یک option
 R04 باید auth واقعی، hash ذخیره‌شده Verification.value، تطبیق roleها با Better Auth، session/revocation، مدیریت امن credential و مجوز را پیاده کند. schema موجود به‌تنهایی ورود فعال یا adapter تأییدشده Better Auth نیست. AI conversation و worker/job اختصاصی هنوز در مراحل مربوط خود هستند. اطلاعات شخصی واقعی، اتصال درگاه و تغییر UI عمومی به داده DB جزو R03 نبودند.
 
 منابع: [Prisma 7](https://www.prisma.io/docs/guides/upgrade-prisma-orm/v7)، [Prisma Client](https://www.prisma.io/docs/orm/prisma-client/setup-and-configuration/introduction)، [PostgreSQL Windows](https://www.postgresql.org/download/windows/)، [EDB binaries](https://www.enterprisedb.com/download-postgresql-binaries)، [transport source](https://github.com/leinelissen/embedded-postgres).
+
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+Migration سوم 202610310003_auth رو به جلو اعمال شد؛ migrationهای R03 تغییر نکردند. User.disabled و mustChangePassword اضافه شدند. مدل RateLimit با کلید یکتا و شمارنده پایدار اضافه شد. قرارداد قبلی Verification.value اصلاح شد: اکنون identifier هش hex64 و یکتا است و value شناسه کاربر مرتبط است. توکن خام در جدول ذخیره نمی‌شود؛ مصرف و expiry در سرویس auth کنترل و تست می‌شوند. ۳ migration روی local و test اعمال شده‌اند؛ app role همچنان DML محدود است.

@@ -19,3 +19,6 @@
 
 Product/Offer و Breadcrumb از داده واقعی صفحه تولید شوند؛ نظر و امتیاز ساختگی درج نشود. نام سازمان، دامنه و تصویر اشتراک‌گذاری از BUSINESS_CONFIG. داده structured با validator مناسب و HTML نهایی بررسی شود. بررسی Search Console و داده میدانی پس از انتشار با دسترسی مالک انجام می‌شود.
 
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+صفحات auth، account و admin دارای metadata noindex هستند. صفحات خصوصی احراز هویت سروری و APIهای no-store دارند. لینک حساس auth از fragment به حافظه فرم منتقل می‌شود؛ هیچ token در query مسیرهای عمومی یا metadata درج نمی‌شود.

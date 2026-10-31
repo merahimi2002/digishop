@@ -35,3 +35,7 @@ APP_ENV یکی از local/test/preview/production است و با NODE_ENV (حا�
 DATABASE_URL و DIRECT_DATABASE_URL اکنون استفاده می‌شوند: اولی نقش برنامه و دومی migration owner. SHADOW_DATABASE_URL اختیاری ولی مستقل و disposable است و نباید همان host/path دیتابیس برنامه باشد. هر URL دیتابیس باید postgres/postgresql باشد؛ در APP_ENV=test نام آن باید با _test تمام شود. خطاهای validation فقط نام فیلد/پیام را می‌دهند و URI/رمز را بازتاب نمی‌دهند.
 
 DEMO_SEED_ENABLED پیش‌فرض false است؛ تنها APP_ENV=local/test و مقدار true اجازه seed می‌دهند. seed در build/install خودکار اجرا نمی‌شود. نقش‌ها و passwordهای portable توسط db:setup:local به envهای gitignored نوشته می‌شوند؛ مقادیر fixture در Compose و CI صرفاً توسعه/تست‌اند. UI عمومی همچنان بدون DB بالا می‌آید و getDatabase فقط هنگام عملیات سروری اتصال می‌سازد.
+
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+AUTH_ENABLED=true به DATABASE_URL و BETTER_AUTH_SECRET تصادفی حداقل ۳۲ کاراکتری نیاز دارد. AUTH_EMAIL_TRANSPORT برابر local یا smtp است. SMTP_HOST، SMTP_PORT (پیش‌فرض 587)، SMTP_USER، SMTP_PASSWORD و EMAIL_FROM برای SMTP؛ OWNER_EMAIL فقط برای bootstrap امن سرور است. در preview/production، SMTP احرازشده و origin HTTPS اجباری است. پورت 465 اتصال TLS و سایر پورت‌ها STARTTLS دارند؛ TLS در محیط واقعی الزامی است. .env.example و .env.test.example نمونه بدون credential هستند. local mailbox فقط توسعه/تست و نه ارسال واقعی است.

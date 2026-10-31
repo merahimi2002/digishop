@@ -1,4 +1,6 @@
 import { Suspense } from 'react';
+import { serverEnv } from '@/server/env';
+import { HeaderAccount } from './auth/header-account';
 import { getTranslations } from 'next-intl/server';
 import { Search, ArrowUp } from 'lucide-react';
 import { siteConfig, type Locale } from '@/config/generated/site';
@@ -47,6 +49,7 @@ export async function StoreShell({
             >
               <Search size={20} aria-hidden="true" />
             </Link>
+            <HeaderAccount enabled={serverEnv.AUTH_ENABLED} />
             <StoreMobileMenu />
             <Suspense fallback={<div className="controls-placeholder" aria-hidden="true" />}>
               <SiteControls />

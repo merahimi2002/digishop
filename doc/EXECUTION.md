@@ -231,3 +231,20 @@ Docker/psql سراسری موجود نبود؛ EDB پاسخ 403 منطقه‌ا�
 - pnpm build و suite مرورگر production: PASS، ۲۳/۲۳؛ خطای Theme/locale/UI برنگشت. تغییرات پس از آن مربوط به ابزار DB/env/docs و تست‌های داده بوده‌اند.
 
 R03 DONE، R04 READY. account schema به معنی auth واقعی یا Better Auth adapter تأییدشده نیست؛ Verification hash و role mapping در R04 باید هماهنگ شوند. Primitive انبار مجوز/quote/binding cart-order ندارد و checkout واقعی در R06/R07 است. backup/restore تولید، PostgreSQL مدیریت‌شده، Docker محلی و اجرای ابری workflow جدید هنوز تأیید نشده‌اند. تغییرات R03 فعلاً در workspace هستند؛ push انجام‌شده مربوط به R02 تأییدشده بود.
+
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+R03 با commit 518143f (feat(database): complete R03 PostgreSQL and Prisma foundation) روی origin/main پوش شد. R04 در working tree برای بازبینی محلی پیاده شد.
+
+- Better Auth1.7.14، Nodemailer10.3.1 و Prisma adapter تراکنشی؛ migration سوم روی local/test اعمال شد، اکنون۴۲ مدل.
+- مسیرهای auth محدود، حساب و نشست، صفحه admin محافظت‌شده و فرم‌های fa/en ساخته شدند؛ catalog admin در این مرحله ساخته نشده.
+- OI-13 پاسخ داده شد؛ ایمیل فقط env محلی است. سرویس ایمیل وجود ندارد؛ OI-14 و T02 باز/مسدودند. هیچ ایمیل خارجی ارسال نشده.
+- bootstrap محلی مالک با رمز تصادفی، تأیید لازم و تغییر رمز اجباری اجرا شد. خود تأیید مالک انجام نشده؛ این کار برعهده مالک است.
+- pnpm test:db: ۳۲ تست پاس؛ pnpm check: ۲۱ unit و کنترل‌های config/env/i18n/lint/type/format؛ build production موفق.
+- pnpm test:auth:e2e: ۴ پاس؛ pnpm test:auth:dev: ۴ پاس در Edge؛ جریان کامل، console بدون خطا، Axe فرم ورود، fa/en و روشن/تیره در۴ عرض. pnpm test:e2e: ۲۳ پایه production در همین تحویل پاس شد.
+- در sandbox محدود، Prisma engine بدون دسترسی لازم خطا داد؛ همان تست با دسترسی محلی لازم و بدون تغییر سیاست یا fixture پاس شد. تست‌ها فقط دیتابیس *_test دارند.
+- CI به auth test مجهز شد؛ اجرای remote هنوز تأیید نشده. تحویل SMTP، ایمیل واقعی و ممیزی امنیت جامع بررسی نشده‌اند. R04 همچنان IN_PROGRESS؛ T01/T03/T04/T05 DONE، T02 BLOCKED، R05 TODO.
+
+## تصمیم مالک — ۲۰۲۶/۱۰/۳۱
+
+اتصال ایمیل واقعی به درخواست صریح مالک به بعد موکول شد. R04 با دامنه auth محلی و تست تکمیل و ادامه R05 مجاز شد؛ OI-14 و اتصال SMTP واقعی gate انتشار R11 باقی‌اند. اعتبارسنجی تولید و الزام HTTPS/SMTP بدون تغییر باقی می‌مانند.

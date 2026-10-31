@@ -20,6 +20,13 @@ export const envSchema = z
     DIRECT_DATABASE_URL: optionalUrl,
     SHADOW_DATABASE_URL: optionalUrl,
     BETTER_AUTH_SECRET: optionalText,
+    AUTH_EMAIL_TRANSPORT: z.enum(['local', 'smtp']).default('local'),
+    SMTP_HOST: optionalText,
+    SMTP_PORT: z.coerce.number().int().min(1).max(65535).default(587),
+    SMTP_USER: optionalText,
+    SMTP_PASSWORD: optionalText,
+    EMAIL_FROM: optionalText,
+    OWNER_EMAIL: z.preprocess((v) => (v === '' ? undefined : v), z.email().optional()),
     CONFIG_ENCRYPTION_KEY: optionalText,
     AI_ENABLED: flag,
     AI_API_KEY: optionalText,
@@ -67,6 +74,16 @@ export const envSchema = z
       });
     if (env.AUTH_ENABLED) {
       if (!env.DATABASE_URL) missing('DATABASE_URL');
+      if (env.AUTH_EMAIL_TRANSPORT === 'smtp') {
+        for (const key of ['SMTP_HOST', 'EMAIL_FROM'] as const) if (!env[key]) missing(key);
+        if ((env.SMTP_USER && !env.SMTP_PASSWORD) || (!env.SMTP_USER && env.SMTP_PASSWORD))
+          missing('SMTP_PASSWORD');
+      }
+      if (['production', 'preview'].includes(env.APP_ENV)) {
+        if (env.AUTH_EMAIL_TRANSPORT !== 'smtp') missing('AUTH_EMAIL_TRANSPORT');
+        for (const key of ['SMTP_USER', 'SMTP_PASSWORD'] as const) if (!env[key]) missing(key);
+        if (!env.APP_ORIGIN.startsWith('https://')) missing('APP_ORIGIN');
+      }
       if (!env.BETTER_AUTH_SECRET || env.BETTER_AUTH_SECRET.length < 32)
         missing('BETTER_AUTH_SECRET');
     }

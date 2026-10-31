@@ -1,6 +1,6 @@
 # فهرست endpointها
 
-همه ردیف‌ها **PLANNED** هستند و مسیرها پیشنهاد اولیه‌اند. مسیر auth پس از انتخاب کتابخانه قطعی می‌شود. اختصار: عمومی = بدون ورود، مالک = فقط داده همان حساب، مدیر = permission لازم. همه مسیرها زیر `/api/v1` هستند مگر خلاف آن ذکر شود.
+جدول اصلی زیر **PLANNED** است؛ مسیرهای اجرایی R04 در بخش انتهای سند آمده‌اند. اختصار: عمومی = بدون ورود، مالک = فقط داده همان حساب، مدیر = permission لازم. همه مسیرها زیر `/api/v1` هستند مگر خلاف آن ذکر شود.
 
 | شناسه | Method / مسیر | دسترسی | ورودی/خروجی و قاعده مهم |
 | --- | --- | --- | --- |
@@ -34,3 +34,25 @@
 
 ورود، خروج، ثبت‌نام، تأیید ایمیل و بازیابی رمز در [AUTH.md](./AUTH.md) تعریف شده‌اند؛ URL آن‌ها تا انتخاب کتابخانه تعیین نشده است. عملیات پنل ممکن است Server Action بمانند؛ فقط مسیرهایی که واقعاً لازم‌اند ساخته می‌شوند. هنگام پیاده‌سازی هر ردیف باید وضعیت، schema دقیق، pagination، permission، rate limit، کد خطا و تست قرارداد تکمیل شود؛ این فهرست تعهد ایجاد endpoint غیرضروری نیست.
 
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+مسیرهای زیر اجرایی‌اند و برخلاف قرارداد تجاری آینده /api/v1 نیستند:
+
+| روش / مسیر | دسترسی و رفتار |
+| --- | --- |
+| POST /api/auth/sign-up/email | عمومی؛ name، email، password؛ فقط CUSTOMER |
+| POST /api/auth/sign-in/email | عمومی؛ email، password؛ تأیید ایمیل الزامی |
+| POST /api/auth/send-verification-email | عمومی؛ email؛ پاسخ عمومی |
+| POST /api/auth/verify-email | عمومی؛ token در body؛ مصرف یک‌بار |
+| POST /api/auth/request-password-reset | عمومی؛ email؛ پاسخ عمومی |
+| POST /api/auth/reset-password | عمومی؛ token و newPassword |
+| POST /api/auth/change-password | نشست معتبر؛ currentPassword و newPassword |
+| POST /api/auth/sign-out | خروج و ابطال نشست |
+| POST /api/auth/revoke-other-sessions | نشست معتبر؛ ابطال سایر نشست‌ها |
+| GET /api/account | user امن یا null؛ بدون token |
+| PATCH /api/account | نشست معتبر؛ فقط name |
+| GET /api/account/sessions | فقط نشست‌های همان کاربر؛ بدون token |
+| DELETE /api/account/sessions | نشست معتبر؛ id متعلق به همان کاربر |
+| GET /api/admin/access | permission کاتالوگ و تغییر رمز اولیه انجام‌شده |
+
+GET روی catch-all auth و مسیرهای خارج از allowlist برابر 404 هستند. جزئیات AUTH و API را رعایت کنید.

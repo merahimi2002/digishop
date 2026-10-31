@@ -149,3 +149,7 @@ StorefrontMotion در انتهای هر main قرار دارد و بعد از hy
 prisma/schema.prisma و migrations مرجع فیزیکی داده‌اند؛ factory اتصال برای CLI/integration و client.ts با server-only و getDatabase lazy برای کد سرور است. QueryClient کلاینت هیچ connection string دریافت نمی‌کند. pool هر process حداکثر ۱۰ اتصال دارد؛ ظرفیت کل استقرار باید با تعداد instanceها سنجیده شود.
 
 inventory.ts primitive داخلی UPDATE شرطی و transaction برای reserve/release است؛ caller/cart/order authorization و quote در R06/R07 اضافه می‌شوند. UI فعلاً concept-products را می‌خواند؛ اتصال آن به DB در R05 و بعد از R04 انجام می‌شود. schema auth وجود دارد ولی Better Auth/ورود هنوز فعال نیستند. تنظیمات، محدودیت‌های SQL و مسیر migration در DATABASE ثبت‌اند.
+
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+src/server/auth شامل factory مستقل و قابل تست، mail، policy، HTTP allowlist و session سروری است؛ فایل‌های index/routes/session دارای مرز server-only هستند. Route Handlerهای Next نازک‌اند. فرم‌ها Zod مشترک، React Hook Form و TanStack Query با private key دارند؛ خروج و تغییر هویت cache خصوصی را پاک می‌کند. بررسی اولیه حساب و admin روی سرور و بررسی هر API روی سرور انجام می‌شود؛ UI مرز امنیتی نیست.

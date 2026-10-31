@@ -93,3 +93,7 @@ test:db در vitest.integration.config.ts از unit جداست؛ قبل از mig
 EXPLAIN ANALYZE/BUFFERS روی ۲۰۰۰ ترجمه index locale/slug را بدون خاموش کردن seqscan انتخاب کرد؛ output/r03/query-plan.json gitignored است. داده SQL تست داخل rollback یا fixtureهای *_test می‌ماند. بازسازی کامل از DB خالی موقت نیز جدا بررسی شده است. CI service PostgreSQL 18.6 و test:db اضافه شد؛ اجرای cloud بعدی هنوز تأیید نشده و Docker محلی در دسترس این دستگاه نبود.
 
 unit suite فعلی ۱۸ تست؛ regression مرورگر production ۲۳ تست همچنان پاس است. این شواهد نه تأیید گردش checkout/payment واقعی است و نه benchmark تولید.
+
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+۲۱ unit و ۳۲ integration (۲۰ داده + ۱۲ auth) پاس شدند. ۴ تست auth مرورگر production پورت3400 و همان ۴ تست dev پورت3500 با Edge پاس شدند: ثبت‌نام، ارسال دوباره تأیید، ورود، نام حساب، بازیابی، خروج، cache و مجوز. Axe روی فرم ورود در fa/en، تم روشن/تیره و عرض‌های320/390/768/1280 اجرا شد؛ خطای console/page ثبت‌شده صفر بود. ۲۳ تست پایه storefront production نیز در این تحویل پاس شده‌اند. workflow CI به تست‌های auth مجهز شد ولی اجرای remote این تغییرات هنوز مشاهده نشده است. تست SMTP خارجی انجام نشده.

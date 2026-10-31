@@ -98,3 +98,7 @@ Lenis 1.3.27 برای درخواست صریح اسکرول نرم نصب و exac
 Prisma CLI، @prisma/client و @prisma/adapter-pg همگی 7.10.1؛ pg و @types/pg برابر 8.23.1؛ @next/env با Next برابر 16.4.3، exact و lock شده‌اند. registry کامل بررسی شد: latest Prisma برابر 8.0.0-rc.29 است و آخرین نسخه بدون prerelease برابر 7.10.1؛ RC جای stable نصب نشد. PostgreSQL واقعی 18.6 با postgres --version تأیید شد؛ image جایگزین و CI نیز 18.6 است.
 
 خروجی prisma-client در src/generated/prisma است؛ PrismaPg و pool driver استفاده می‌شوند، URL در prisma.config.ts و env است. برنامه همان Node 26.13.0/TS7 را حفظ کرده و generate، migration، adapter، build و تست واقعی پاس‌اند. allowBuilds فقط برای prisma و @prisma/engines اضافه شد؛ سیاست بررسی install scriptها دور زده نشد. Beta-label transport باینری محلی، dependency برنامه نیست؛ جزئیات و provenance در DATABASE است.
+
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+better-auth=1.7.14 و nodemailer=10.3.1 stable دقیق نصب و lock شده‌اند؛ @types/nodemailer=8.0.2 آخرین بسته type بررسی‌شده است. Prisma adapter تراکنشی است و هش رمز به Better Auth واگذار شده. انتخاب‌های قبلی auth اکنون اجرایی‌اند؛ SMTP واقعی هنوز متصل نیست. منابع رسمی: https://www.better-auth.com/docs/authentication/email-password و https://www.better-auth.com/docs/adapters/prisma و https://nodemailer.com/smtp .

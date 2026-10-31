@@ -30,3 +30,7 @@
 client سروری و lazy، app-role غیرمالک و فاقد CREATE، عدم دسترسی app به _prisma_migrations، owner مجزا، PostgreSQL لوپ‌بک با SCRAM و credential تصادفی محلی بررسی شدند. UUID جای authorization نیست؛ مجوز row/object و rate limit به R04/R05/R07 وابسته‌اند. ledgerهای AuditEvent/InventoryMovement با trigger از UPDATE/DELETE عادی محافظت می‌شوند. Verification فقط hash و guest cart فقط hash ذخیره می‌کند. Error validation شامل URI یا مقدار secret نیست؛ logging خطای DB در endpoint آینده باید همچنان sanitize شود.
 
 تست‌ها روی *_test و نقش‌های جدا اجرا می‌شوند؛ نام DB تنها guard کمکی است. Compose/CI password fixtureهای عمومی توسعه دارند، نه credential واقعی. shadow باید جدا باشد؛ migration/reset تولید بدون backup و برنامه expand/contract مجاز نشده. هیچ policy انتشار واقعی در این مرحله اجرا نشده است.
+
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+R04: allowlist endpoint، Origin دقیق، JSON محدود، password hashing کتابخانه، کوکی HttpOnly/SameSite/Secure HTTPS، session revocation و بررسی نقش تازه اجرایی‌اند. rate limit دیتابیسی ایمیل نرمال‌شده و bucket مشترک مسیر در برابر XFF جعلی تست شده است. identifier توکن هش و هدف‌دار است؛ مصرف اتمیک، انقضا، پاسخ عمومی ایمیل و عدم افشای session token تست شده‌اند. حساب مالک رمز تصادفی محلی، تأیید ایمیل و تغییر رمز اجباری دارد. این شواهد ممیزی امنیت مستقل یا تأیید سرویس SMTP نیستند.

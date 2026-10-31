@@ -79,3 +79,7 @@ Next dev فایل AGENTS.md ریشه را خودکار ایجاد می‌کند 
 فرمان‌ها: db:generate، db:validate، db:format، db:migrate، db:migrate:test، db:status، db:seed و test:db. build/typecheck خودشان client را تولید می‌کنند. test:db قبل از اتصال مقصد، هم‌محل بودن app/owner، متفاوت بودن نقش‌ها و suffix *_test را بررسی می‌کند، migration را روی همان تست اجرا و DML برنامه را provision می‌کند. به محیط تولید متصل نکنید؛ نام تست guard کمکی است، جداسازی credential/زیرساخت همچنان لازم است.
 
 تغییر schema باید migration جدید داشته باشد؛ db push/reset یا تغییر فایل migration اعمال‌شده استفاده نشود. Shadow مستقل برای migrate dev/diff لازم است. generated client، native binaries، cluster و env واقعی در Git نیستند.
+
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+پس از db:up و migration، AUTH_ENABLED=true و secret تصادفی را در .env.local بگذارید. برای local، AUTH_EMAIL_TRANSPORT=local و OWNER_EMAIL خصوصی را تنظیم و pnpm auth:owner اجرا کنید. رمز اولیه در .tools/owner-credentials.json و لینک‌ها در .tools/mailbox هستند. تأیید، ورود در /fa/auth/sign-in و تغییر رمز اولیه را انجام دهید. پس از تغییر env سرور dev را restart کنید. pnpm test:db قبل از pnpm test:auth:e2e اجرا شود؛ pnpm test:auth:dev از پورت جدا 3500 و .next-e2e-dev استفاده می‌کند. روی ویندوز در صورت نیاز PLAYWRIGHT_CHANNEL=msedge انتخاب شود.

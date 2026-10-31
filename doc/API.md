@@ -22,3 +22,6 @@ endpointهای upload و AI محدودیت اندازه، زمان و نرخ د�
 
 هر تغییر ناسازگار قرارداد پیش از انتشار مصرف‌کننده ثبت شود. پس از راه‌اندازی، OpenAPI یا قرارداد schema قابل تولید از کد، نمونه‌های پاک‌سازی‌شده و تست contract اضافه شوند؛ این Markdown به‌تنهایی اثبات اجرای API نیست.
 
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+R04 از envelope محدود {ok:true} برای موفقیت auth و {error:code} برای خطا استفاده می‌کند؛ Bearer/session token در JSON برنمی‌گردد. کدهای AUTH_FAILED، RATE_LIMITED و SESSION_EXPIRED عمداً عمومی‌اند. همه پاسخ‌های خصوصی Cache-Control: private,no-store دارند. نوشتن نیازمند Origin دقیق، JSON و سقف ۸ KiB است. callbackURL ارسالی کلاینت پذیرفته نمی‌شود. فهرست مسیر اجرایی در API_ENDPOINT است؛ استاندارد پیشنهادی API تجاری برای R05+ باقی است.

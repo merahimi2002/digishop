@@ -21,3 +21,10 @@
 
 artifact قبلی و تغییر feature flag در دسترس باشند. rollback کد فقط با schema سازگار انجام شود؛ migration مخرب با revert کور اصلاح نمی‌شود. در مشکل مالی، checkout جدید متوقف ولی دریافت callback و reconciliation امن حفظ شود. پیش از بازگشایی، وضعیت تراکنش‌های در جریان بررسی شود. تأیید انتشار مطابق دستور جاری مالک است؛ درخواست فعلی فقط مستندسازی را مجاز کرده است.
 
+## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
+
+R04 هنوز آماده انتشار عمومی auth نیست: SMTP واقعی OI-14 موجود نیست. در preview/production، AUTH_ENABLED=true بدون SMTP احرازشده و HTTPS در validation رد می‌شود. migration سوم قبل از برنامه deploy و app role grantها اعمال شوند. مقدار owner email و secret فقط از secret store/env سرور؛ فایل‌های .tools، mailbox و credential محلی deploy نشوند.
+
+## تصمیم مالک — ۲۰۲۶/۱۰/۳۱
+
+اتصال ایمیل واقعی به درخواست صریح مالک به بعد موکول شد. R04 با دامنه auth محلی و تست تکمیل و ادامه R05 مجاز شد؛ OI-14 و اتصال SMTP واقعی gate انتشار R11 باقی‌اند. اعتبارسنجی تولید و الزام HTTPS/SMTP بدون تغییر باقی می‌مانند.

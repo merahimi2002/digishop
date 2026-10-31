@@ -61,21 +61,23 @@ enum DiscountKind {
 }
 
 model User {
-  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  email         String        @unique @db.VarChar(254)
-  name          String        @db.VarChar(160)
-  emailVerified Boolean       @default(false)
-  image         String?
-  phone         String?       @unique @db.VarChar(20)
-  role          Role          @default(CUSTOMER)
-  createdAt     DateTime      @default(now()) @db.Timestamptz(3)
-  updatedAt     DateTime      @default(now()) @updatedAt @db.Timestamptz(3)
-  sessions      Session[]
-  accounts      Account[]
-  addresses     Address[]
-  carts         Cart[]
-  orders        Order[]
-  couponUses    CouponUsage[]
+  id                 String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email              String        @unique @db.VarChar(254)
+  name               String        @db.VarChar(160)
+  emailVerified      Boolean       @default(false)
+  disabled           Boolean       @default(false)
+  mustChangePassword Boolean       @default(false)
+  image              String?
+  phone              String?       @unique @db.VarChar(20)
+  role               Role          @default(CUSTOMER)
+  createdAt          DateTime      @default(now()) @db.Timestamptz(3)
+  updatedAt          DateTime      @default(now()) @updatedAt @db.Timestamptz(3)
+  sessions           Session[]
+  accounts           Account[]
+  addresses          Address[]
+  carts              Cart[]
+  orders             Order[]
+  couponUses         CouponUsage[]
 }
 
 model Session {
@@ -115,7 +117,7 @@ model Account {
 
 model Verification {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  identifier String
+  identifier String   @unique
   value      String
   expiresAt  DateTime @db.Timestamptz(3)
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
@@ -600,4 +602,13 @@ model OutboxEvent {
   createdAt   DateTime  @default(now()) @db.Timestamptz(3)
 
   @@index([processedAt, availableAt])
+}
+
+model RateLimit {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key         String @unique
+  count       Int
+  lastRequest BigInt
+
+  @@index([lastRequest])
 }
