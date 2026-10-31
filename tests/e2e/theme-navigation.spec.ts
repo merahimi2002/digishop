@@ -7,27 +7,27 @@ test('theme and locale navigation do not produce React console errors', async ({
   });
   page.on('pageerror', (error) => errors.push(error.message));
   await page.goto('/fa');
-  await page.getByRole('button', { name: 'تاریک', exact: true }).click();
+  await page.getByRole('switch').setChecked(true);
   await expect(page.locator('html')).toHaveClass(/dark/);
+  await page.locator('.language-picker summary').click();
   await page.getByRole('link', { name: 'English', exact: true }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
   await expect(page.locator('html')).toHaveClass(/dark/);
-  await page.getByRole('button', { name: 'Light', exact: true }).click();
+  await page.getByRole('switch').setChecked(false);
   await expect(page.locator('html')).toHaveClass(/light/);
+  await page.locator('.language-picker summary').click();
   await page.getByRole('link', { name: 'فارسی', exact: true }).click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'fa');
   await expect(page.locator('html')).toHaveClass(/light/);
-  await page.getByRole('button', { name: 'هماهنگ با دستگاه', exact: true }).click();
+  await page.evaluate(() => localStorage.removeItem('theme'));
+  await page.reload();
   await page.emulateMedia({ colorScheme: 'dark' });
   await expect(page.locator('html')).toHaveClass(/dark/);
   await page.emulateMedia({ colorScheme: 'light' });
   await expect(page.locator('html')).toHaveClass(/light/);
   await page.reload();
-  await expect(page.getByRole('button', { name: 'هماهنگ با دستگاه', exact: true })).toHaveAttribute(
-    'aria-pressed',
-    'true',
-  );
+  await expect(page.getByRole('switch')).toBeEnabled();
   await expect(page.locator('html')).toHaveClass(/light/);
   expect(errors).toEqual([]);
 });
@@ -36,9 +36,9 @@ test('theme choice syncs between tabs', async ({ context, page }) => {
   await page.goto('/fa');
   const second = await context.newPage();
   await second.goto('/en');
-  await page.getByRole('button', { name: 'تاریک', exact: true }).click();
+  await page.getByRole('switch').setChecked(true);
   await expect(second.locator('html')).toHaveClass(/dark/);
-  await second.getByRole('button', { name: 'Light', exact: true }).click();
+  await second.getByRole('switch').setChecked(false);
   await expect(page.locator('html')).toHaveClass(/light/);
   await second.close();
 });
@@ -64,11 +64,12 @@ test('theme controls and locale switch still work when theme storage is blocked'
     };
   });
   await page.goto('/fa');
-  await page.getByRole('button', { name: 'تاریک', exact: true }).click();
+  await page.getByRole('switch').setChecked(true);
   await expect(page.locator('html')).toHaveClass(/dark/);
+  await page.locator('.language-picker summary').click();
   await page.getByRole('link', { name: 'English', exact: true }).click();
   await expect(page.locator('html')).toHaveClass(/dark/);
-  await page.getByRole('button', { name: 'Light', exact: true }).click();
+  await page.getByRole('switch').setChecked(false);
   await expect(page.locator('html')).toHaveClass(/light/);
   expect(errors).toEqual([]);
 });

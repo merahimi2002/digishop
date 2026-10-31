@@ -48,7 +48,7 @@ export const siteConfig = {
         "accent": "#2DD4BF"
       }
     },
-    "persianFont": null,
+    "persianFont": "Vazirmatn",
     "latinFont": null
   },
   "timezone": "Asia/Tehran"

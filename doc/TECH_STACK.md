@@ -77,3 +77,17 @@ ESLint 10.13.0 و آخرین typescript-eslint با TS7 و برخی peerهای R
 منابع رسمی: [Next installation](https://nextjs.org/docs/app/getting-started/installation)، [next-intl routing](https://next-intl.dev/docs/routing/setup)، [TanStack SSR](https://tanstack.com/query/latest/docs/framework/react/guides/advanced-ssr)، [TypeScript side-by-side](https://devblogs.microsoft.com/typescript/announcing-typescript-7-0/#running-side-by-side-with-typescript-6.0)، [Oxlint](https://oxc.rs/docs/guide/usage/linter.html)، [Better Auth](https://better-auth.com/docs/installation)، [Node releases](https://nodejs.org/dist/index.json)، [npm registry](https://registry.npmjs.org/).
 
 workflow از releaseهای رسمی checkout 7.0.1، setup-node 7.1.0، upload-artifact 7.0.2 و pnpm/action-setup 6.1.0 استفاده می‌کند. اجرای ابری هنوز انجام نشده است.
+
+## افزوده‌های R02
+
+@fontsource/vazirmatn نسخه 5.3.0 (آخرین stable بررسی‌شده در registry)، import محلی CSS با مجوز OFL؛ @axe-core/playwright نسخه 4.14.0 برای آزمون WCAG خودکار. نسخه‌ها exact و در lockfile هستند. در بازنگری جدید به درخواست مالک، GSAP و ScrollTrigger جایگزین حرکت اولیه شدند.
+
+
+## حرکت در بازنگری R02
+
+GSAP 3.15.0 و @gsap/react 2.1.2 از registry رسمی بررسی، exact نصب و در lockfile ثبت شدند. ScrollTrigger از خود gsap است؛ useGSAP و matchMedia برای scope، cleanup و reduced-motion استفاده می‌شوند.
+
+منابع: [React integration](https://gsap.com/resources/React/)، [ScrollTrigger](https://gsap.com/docs/v3/Plugins/ScrollTrigger/)، [matchMedia](https://gsap.com/docs/v3/GSAP/gsap.matchMedia()/).
+
+
+Lenis 1.3.27 برای درخواست صریح اسکرول نرم نصب و exact lock شد. اتصال ticker مشترک، cleanup و reduced-motion در UI ثبت است. [مرجع رسمی](https://github.com/darkroomengineering/lenis).

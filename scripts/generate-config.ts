@@ -25,7 +25,8 @@ const darkSvg = await workspaceAsset(config.brand.logoDarkPath);
 const logo = { light: extractLogoShapes(lightSvg), dark: extractLogoShapes(darkSvg) };
 const colors = config.appearance.logoColors;
 const generated = '// Generated from doc/BUSINESS_CONFIG.md. Do not edit.\n';
-const css = `/* Generated from doc/BUSINESS_CONFIG.md. Do not edit. */\n:root { --brand-primary: ${config.appearance.primaryColor}; --logo-base: ${colors.light.base}; --logo-accent: ${colors.light.accent}; }\n.dark { --logo-base: ${colors.dark.base}; --logo-accent: ${colors.dark.accent}; }\n`;
+const css = `/* Generated from doc/BUSINESS_CONFIG.md. Do not edit. */\n:root { --brand-navy: ${colors.light.base}; --brand-primary: ${config.appearance.primaryColor}; --logo-base: ${colors.light.base}; --logo-accent: ${colors.light.accent}; }\n.dark { --logo-base: ${colors.dark.base}; --logo-accent: ${colors.dark.accent}; }\n`;
+const typography = `:root { --font-fa: ${JSON.stringify(config.appearance.persianFont ?? 'Tahoma')}, Tahoma, sans-serif; --font-en: ${JSON.stringify(config.appearance.latinFont ?? 'Arial')}, Helvetica, sans-serif; }\n`;
 const outputs = new Map([
   [
     'public/brand/theme-init.js',
@@ -39,7 +40,7 @@ const outputs = new Map([
     'src/config/generated/logo.ts',
     `${generated}export const logoGeometry = ${JSON.stringify(logo, null, 2)} as const;\n`,
   ],
-  ['src/app/brand.generated.css', css],
+  ['src/app/brand.generated.css', css + typography],
   [
     'public/brand/mark.svg',
     lightSvg.replace(

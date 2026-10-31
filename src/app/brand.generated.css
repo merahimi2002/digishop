@@ -1,3 +1,4 @@
 /* Generated from doc/BUSINESS_CONFIG.md. Do not edit. */
-:root { --brand-primary: #0F766E; --logo-base: #0B1F3A; --logo-accent: #0F766E; }
+:root { --brand-navy: #0B1F3A; --brand-primary: #0F766E; --logo-base: #0B1F3A; --logo-accent: #0F766E; }
 .dark { --logo-base: #EDF2F7; --logo-accent: #2DD4BF; }
+:root { --font-fa: "Vazirmatn", Tahoma, sans-serif; --font-en: "Arial", Helvetica, sans-serif; }

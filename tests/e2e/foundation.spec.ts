@@ -10,9 +10,7 @@ for (const { code, direction } of siteConfig.localization.locales) {
     await expect(page.locator('html')).toHaveAttribute('dir', direction);
     await expect(page).toHaveTitle(siteConfig.brand.names[code]);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
-    const dark = code === 'fa' ? 'تاریک' : 'Dark';
-    const light = code === 'fa' ? 'روشن' : 'Light';
-    await page.getByRole('button', { name: dark, exact: true }).click();
+    await page.getByRole('switch').setChecked(true);
     await expect(page.locator('html')).toHaveClass(/dark/);
     await expect
       .poll(async () =>
@@ -26,7 +24,7 @@ for (const { code, direction } of siteConfig.localization.locales) {
     await page.screenshot({ path: `output/r01/${code}-dark-desktop.png`, fullPage: true });
     await page.reload();
     await expect(page.locator('html')).toHaveClass(/dark/);
-    await page.getByRole('button', { name: light, exact: true }).click();
+    await page.getByRole('switch').setChecked(false);
     await expect(page.locator('html')).toHaveClass(/light/);
     await page.screenshot({ path: `output/r01/${code}-light-desktop.png`, fullPage: true });
     await page.setViewportSize({ width: 360, height: 800 });
@@ -45,6 +43,7 @@ for (const { code, direction } of siteConfig.localization.locales) {
 
 test('language switch preserves page and updates direction', async ({ page }) => {
   await page.goto('/fa');
+  await page.locator('.language-picker summary').click();
   await page.getByRole('link', { name: 'English', exact: true }).click();
   await expect(page).toHaveURL(/\/en$/);
   await expect(page.locator('html')).toHaveAttribute('dir', 'ltr');
@@ -52,6 +51,8 @@ test('language switch preserves page and updates direction', async ({ page }) =>
 
 test('keyboard skip link moves focus to the main content', async ({ page }) => {
   await page.goto('/fa');
+  // Wait for hydration, rather than sending a Tab while Next is committing the route.
+  await expect(page.getByRole('switch')).toBeEnabled();
   await page.keyboard.press('Tab');
   await expect(page.locator('.skip-link')).toBeFocused();
   await page.keyboard.press('Enter');

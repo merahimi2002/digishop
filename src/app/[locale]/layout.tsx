@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { siteConfig } from '@/config/generated/site';
 import { routing } from '@/i18n/routing';
 import { Providers } from '@/components/providers';
+import { StoreShell } from '@/components/store-shell';
 import { serverEnv } from '@/server/env';
 import '../globals.css';
 
@@ -44,7 +45,9 @@ export default async function LocaleLayout({ children, params }: Props) {
       </head>
       <body>
         <NextIntlClientProvider>
-          <Providers>{children}</Providers>
+          <Providers>
+            <StoreShell locale={locale}>{children}</StoreShell>
+          </Providers>
         </NextIntlClientProvider>
       </body>
     </html>

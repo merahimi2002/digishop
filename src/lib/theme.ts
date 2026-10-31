@@ -20,6 +20,13 @@ export function initializeTheme(defaultTheme: Theme) {
         : 'light'
       : theme;
   const root = document.documentElement;
+  try {
+    const palette = localStorage.getItem('palette');
+    if (palette && ['original', 'violet', 'ocean', 'rose'].includes(palette))
+      root.dataset.palette = palette;
+  } catch {
+    /* Palette remains at its default. */
+  }
   root.dataset.themePreference = theme;
   root.classList.remove('light', 'dark');
   root.classList.add(resolved);

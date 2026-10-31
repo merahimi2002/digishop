@@ -8,6 +8,7 @@ const themeEvent = 'digishop:theme-change';
 const mediaQuery = '(prefers-color-scheme: dark)';
 const defaultTheme = siteConfig.appearance.defaultTheme;
 let inMemoryPreference: Theme | undefined;
+let transitionTimer: ReturnType<typeof setTimeout> | undefined;
 const ThemeContext = createContext<{
   theme: Theme;
   resolvedTheme: 'light' | 'dark';
@@ -33,6 +34,14 @@ function snapshot() {
 function applyTheme() {
   const [theme, resolved] = snapshot().split(':');
   const root = document.documentElement;
+  if (
+    !root.classList.contains(resolved!) &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    root.classList.add('theme-transition');
+    clearTimeout(transitionTimer);
+    transitionTimer = setTimeout(() => root.classList.remove('theme-transition'), 260);
+  }
   root.dataset.themePreference = theme;
   root.classList.remove('light', 'dark');
   root.classList.add(resolved!);

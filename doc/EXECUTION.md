@@ -6,8 +6,8 @@
 
 - R01 تکمیل شد؛ هر هفت تسک DONE هستند.
 - خروجی: پروژه محلی، دو زبان/جهت، سه انتخاب تم، لوگوی تأییدشده، config generator، env validation، Query provider و CI اولیه.
-- آخرین بررسی پس از R01-FIX-001: ۱۶ تست واحد، ۸ تست dev و ۸ تست production پاس؛ console.error در regression ثبت و بررسی شد؛ lint، typecheck، format و build پاس.
-- قدم بعد: R02-T01 برای تکمیل هویت/فونت و طراحی؛ R03 نیز از نظر وابستگی آماده است، هنوز آغاز نشده.
+- آخرین بررسی R02: ۱۶ تست واحد، ۱۴ تست dev و ۱۴ تست production پاس؛ axe و regression کنسول/تم/زبان نیز پاس؛ lint، typecheck، format و build پاس.
+- R02: پیش‌نمایش خانه و محصول/دیالوگ آماده REVIEW مالک؛ T01 تا T04 تکمیل، T05/T06 منتظر بازخورد طراحی. R03 هنوز آغاز نشده.
 - دیتابیس، auth اجرایی، پرداخت و AI هنوز پیاده‌سازی نشده‌اند؛ انتخاب auth برابر Better Auth است.
 - مانع فعال R01: ندارد؛ اطلاعات مراحل آینده در OWNER_INPUT باز است.
 ## پروتکل هر task
@@ -131,3 +131,77 @@ workflow به تست dev نیز مجهز شد؛ اجرا در GitHub هنوز ت
 
 به درخواست مالک، PNGهای کانسپت، HTML/CSS پیش‌نمایش قدیمی، پروفایل موقت مرورگر، screenshots و گزارش‌های تست، build آزمایشی dev، tsbuildinfo و پوشه خالی docs حذف شدند. SVG نهایی، همه مستندات، سورس، تست، CI و lockfile حفظ شدند. node_modules، .tools و cache اصلی .next برای ادامه اجرای محلی نگه داشته و gitignored هستند. .gitignore برای log و فایل‌های سیستم تکمیل و .gitattributes برای LF ثابت اضافه شد. تاریخچه promptها حفظ ولی وضعیت دارایی‌های حذف‌شده روشن شد. مخزن هنوز Git init یا به GitHub push نشده است.
 
+
+## آغاز R02 — فونت و بازطراحی
+
+مالک اعلام کرد پروژه را روی GitHub منتشر کرده و IRANSans فارسی و بازطراحی UI انیمیشنی می‌خواهد. فایل فونت در workspace یافت نشد؛ اتصال واقعی next/font/local تا دریافت فایل در OI-20 باز است. هیچ فونت جایگزینی به نام IRANSans معرفی و هیچ فایل ناشناسی دانلود نشد. UI فعلی صفحه پایه R01 است، نه طراحی نهایی storefront. R02 و R02-T01 در IN_PROGRESS؛ فونت و اجرای طراحی نهایی هنوز انجام نشده‌اند. درخواست فایل WOFF2 و مرجع بصری اختیاری مطرح می‌شود؛ باقی انتخاب‌های معمول طراحی با دستیار است.
+
+## اجرای R02 — Vazirmatn و پیش‌نمایش فروشگاه لوکس — ۲۰۲۶-۱۰-۳۰
+
+State: REVIEW (بازخورد طراحی مالک هنوز دریافت نشده). مالک جهت لوکس و خلوت با hero جسورانه، حفظ لوگو/پالت و Vazirmatn با import از Fontsource را انتخاب کرد و طراحی مستقل را مجاز دانست. درخواست قبلی IRANSans superseded و OI-20 پاسخ‌داده شد. هیچ انتشار یا push انجام نشد؛ اعلام انتشار قبلی GitHub توسط مالک مبنای تغییر remote قرار نگرفت.
+
+خروجی: جایگزینی صفحه فنی R01 با صفحه فروشگاهی دوزبانه، hero تیره و تصویر اختصاصی، دسته‌های تعاملی، مجموعه مفهومی، جست‌وجو/فیلتر و حالت خالی، dialog جزئیات با focus/Escape، منوی موبایل، روایت تصویری و footer. بدون fake price، موجودی، نظر یا مشخصات فنی؛ preview بودن مجموعه و نبود فروش در صفحه روشن است. صفحه کامل دیتابیس محصول در R05 باقی است.
+
+Vazirmatn 5.3.0 از npm رسمی نصب و lock شد؛ import در globals.css و وزن‌های 400/500/600/700، خانواده فارسی در BUSINESS_CONFIG و توکن تولیدی. آزمون font load/check واقعی پاس شد. مجوز رسمی بسته در public/fonts/vazirmatn-OFL.txt کپی شد؛ وابستگی runtime به CDN ندارد.
+
+از مهارت cinematic-product-site برای جهت تصویری و imagegen برای سه تصویر مفهومی استفاده شد. promptهای کامل در R02_ASSETS؛ اصل PNGها در assets/r02-source و نسخه‌های WebP محلی در public/images/collection. فایل hero جدا از thumbnail است. لوگو/هندسه و رنگ‌های اصلی تغییر نکردند. حرکت با CSS، IntersectionObserver و pointer/scroll محدود انجام می‌شود؛ reduced-motion مسیر ثابت دارد و کتابخانه انیمیشن اضافه نشده است.
+
+شواهد نهایی:
+
+- `pnpm check`: PASS؛ config/env، ۸۵ پیام هر زبان و ICU، Oxlint، TS7، ۱۶ unit test و Prettier.
+- `PLAYWRIGHT_CHANNEL=msedge pnpm test:e2e:dev --workers=2`: ۱۴/۱۴ PASS روی dev مستقل 3100.
+- `pnpm build`: PASS با Next 16.4.3/Turbopack، بررسی TypeScript فعال.
+- `PLAYWRIGHT_CHANNEL=msedge pnpm test:e2e --workers=2`: ۱۴/۱۴ PASS روی production مستقل 3200.
+- تست‌های جدید: بارگذاری تصویر و Vazirmatn، search/filter و حالت خالی، modal keyboard/focus، منوی موبایل، عرض‌های ۳۲۰/۳۶۰/۳۹۰/۱۲۸۰، تم‌ها و reduced motion. regression خطای script و locale navigation همچنان پاس است.
+- axe 4.14.0 خانه fa/en را در light/dark و dialog باز با tags استاندارد AA تا WCAG2.2 بدون violation گزارش کرد. شماره‌های تزئینی دسته‌ها contrast پایین داشتند و با اصلاح opacity پاس شدند؛ rule غیرفعال یا exclude نشد.
+- تست skip-link در cold load پیش از hydration ورودی می‌فرستاد؛ با انتظار روی aria-pressed واقعی کنترل theme، بعد از hydration سه بار پیاپی و سپس suite کامل پاس شد؛ sleep دلخواه یا حذف assertion انجام نشد.
+- تصاویر واقعی preview در output/r02 شامل desktop1280 و mobile390، fa/en و light/dark ذخیره‌اند و gitignored هستند. نمای فارسی روشن desktop، فارسی تیره mobile و انگلیسی تیره desktop و crop نهایی hero بصری دیده شدند. همه عرض‌ها از نظر overflow نیز تست شده‌اند.
+
+محدودیت: تست خودکار AA گواهی انطباق کامل نیست؛ screen-reader دستی، همه مرورگرها و field CWV هنوز بررسی نشده‌اند. checkout، auth اجرایی، search دیتابیس و محصول واقعی در این مرحله نیستند. طرح هنوز تأیید ظاهری مالک ندارد؛ R02 به‌دروغ DONE نشده است. سرورهای آزمون متعلق به Playwright خاتمه یافتند؛ dev شخصی مالک دست‌کاری نشد.
+
+
+## بازنگری R02 — شواهد نهایی
+
+- pnpm check: config/env، ۹۷ پیام هر زبان و ICU، Oxlint، typecheck، ۱۶ تست واحد و قالب‌بندی بررسی می‌شوند.
+- test:e2e:dev --workers=2: ۱۹/۱۹ PASS روی dev مستقل 3100 با Edge.
+- pnpm build: PASS با Next 16.4.3، بررسی TypeScript فعال.
+- test:e2e --workers=2: ۱۹/۱۹ PASS روی production مستقل 3200 با Edge.
+- صفحات مستقل در fa/en، حفظ مسیر محصول و query دسته با تغییر زبان، منوی پرچمی و Escape، تم روشن/تاریک/خودکار، عرض حداکثر ۱۱۲۰ و سرمه‌ای واقعی بررسی شدند.
+- اسکرول رفت‌وبرگشت GSAP و cleanup پس از reduced-motion پاس شدند. console.error در ناوبری و صفحات بررسی شده و هیچ assertion خطا خاموش نشده است.
+- axe روی خانه، dialog و مسیرهای مجموعه/دسته‌ها/درباره/هدفون در هر دو زبان و تم، violation تحت قواعد AA تا WCAG2.2 گزارش نکرد؛ این گواهی کامل انطباق نیست.
+- صفحه محصول ناشناخته HTTP 404 دارد؛ status پیش از streaming در proxy تعیین می‌شود. dynamicParams به‌تنهایی در dev برای این وضعیت کافی نبود.
+- اجرای زودهنگام GSAP در shell مشترک باعث hydration mismatch می‌شد؛ با marker و scope داخل main و شروع پس از hydration صفحه اصلاح شد. screenshot نیز پس از readiness و با caret اولیه گرفته می‌شود تا ابزار تست پیش از hydration استایل وارد نکند.
+- previewها در output/r02-v2 ذخیره‌اند؛ هیروی دسکتاپ روشن، موبایل تیره و صفحه محصول فارسی بصری بررسی شدند. overflow در عرض‌های ۳۲۰/۳۶۰/۳۹۰/۱۲۸۰ تست شده است.
+
+R02 همچنان REVIEW است؛ محصول‌ها مفهومی‌اند و قابلیت فروش واقعی اضافه نشده. سرور شخصی 3000 و GitHub دست‌کاری نشدند.
+
+
+## QA اصلاح کانتینر و کنترل ظاهر
+
+- کانتینر در عرض‌های ۳۲۰، ۳۹۰، ۱۲۸۰، ۱۴۴۰ و ۱۹۲۰ دقیقاً ۹۰٪ اندازه‌گیری شد؛ overflow افقی ندارد.
+- تم اولیه با تغییر prefers-color-scheme سیستم عوض می‌شود؛ گزینه خودکار نمایش داده نمی‌شود و toggle بعد از انتخاب صریح ترجیح کاربر را ذخیره می‌کند. همگام‌سازی تم بین تب‌ها و سناریوی storage مسدود پاس شدند.
+- هر چهار پالت در light/dark با axe و قواعد AA تا WCAG2.2 بدون violation بودند؛ انتخاب پالت پس از reload حفظ شد و Escape/focus منو بررسی شد. هیچ قانون دسترس‌پذیری یا assertion کنسول حذف نشد.
+- pnpm check: ۱۰۲ پیام هر زبان، lint، typecheck، ۱۶ تست واحد و قالب‌بندی پاس. pnpm build پاس.
+- suite مرورگر با Edge: ۲۰/۲۰ dev روی 3100 و ۲۰/۲۰ production روی 3200 پاس.
+- اسکرین‌شات‌های output/r02-v3: دسکتاپ رز تاریک و موبایل رز روشن بصری دیده شدند. خروجی‌ها محلی و gitignored هستند.
+
+این شواهد جای اعداد تحویل قبلی را برای نسخه جاری می‌گیرند. تأیید ظاهری مالک و ارزیابی میدانی CWV هنوز انجام نشده‌اند.
+
+
+## QA تیتر، toggle و اسکرول نرم
+
+آیکون‌های ماه/خورشید داخل toggle، جابه‌جایی thumb و transition رنگ تم، کاهش اندازه تیتر و SignatureHeading مشترک پیاده شدند. Lenis 1.3.27 به GSAP ticker وصل است و cleanup در navigation و reduced-motion بررسی می‌شود. محتوای SSR و شکل پیوسته حروف فارسی حفظ است.
+
+تست تازه signature-motion اسکرول wheel رفت‌وبرگشت، فعال/پاک شدن Lenis، آیکون‌های داخل track، transition و حذف آن در reduced-motion، اندازه h1 و تیتر انگلیسی را بررسی می‌کند. regression منوی موبایل بعد از اصلاح لایه dropdown و hit area سوئیچ پاس شد. هیچ force click یا حذف assertion انجام نشد.
+
+آخرین suite dev: ۲۱/۲۱ PASS روی Edge و پورت 3100. pnpm check شامل ۱۶ unit، typecheck، lint و i18n پاس است. تصاویر دسکتاپ روشن و موبایل تاریک در output/r02-v4 ذخیره و بصری بررسی شدند؛ این فایل‌ها gitignored هستند. pnpm build با typecheck فعال PASS و suite production روی Edge/3200 نیز ۲۱/۲۱ PASS شد. طراحی همچنان REVIEW است.
+
+
+## بازبینی مهارت‌ها — ۲۰۲۶/۱۰/۳۱
+
+UI/موشن با حفظ هویت و عرض ۹۰٪ اصلاح شد؛ شرح کامل در [UI_REVIEW.md](./UI_REVIEW.md). build و check پاس؛ ۱۶ unit، suite production با ۲۳ تست و regressionهای dev پاس شدند. پس از اصلاح نهایی منوی زبان، دو تست polish در هر دو حالت دوباره پاس شدند. snapshotهای before/after از production در ۱۴۴۰/۷۶۸/۳۹۰ ثبت و بررسی شدند. inspector با سه استثنای مستند برای منوی واقعی/کالای عکس‌دار/border مورد درخواست مالک: ۰ FAIL و ۴ WARN قابل دفاع. source-lint سلیقه‌ای مهارت هنوز برای CSS قدیمی و قراردادهای حفظ‌شده finding دارد؛ نتیجه کامل در گزارش موجود است.
+
+معیارهای تازه: متن تبلت خارج از محدوده عکس، یک CTA در هیرو، aria-current صحیح در صفحات مستقل و محصولات، و dropdown زبان داخل قاب موبایل RTL/LTR. خطای React یا assertion با force click/exclude مخفی نشد. R02 همچنان REVIEW است؛ gate خودکار معادل تأیید ظاهر مالک، screen-reader یا CWV میدانی نیست.
+
+
+پذیرش نهایی ۲۰۲۶/۱۰/۳۱: مالک نسخه بازبینی‌شده را تأیید کرد. R02 اکنون DONE است و وضعیت REVIEW بالاتر مربوط به پیش از پذیرش است. commit/push همین خروجی مجاز شد؛ شروع R03 نیز مجاز است.
