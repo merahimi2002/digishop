@@ -15,9 +15,9 @@ for (const locale of ['fa', 'en'] as const) {
       '/collection',
       '/categories',
       '/about',
-      '/products/headphones',
-      '/products/keyboard',
-      '/products/mouse',
+      '/preview/products/headphones',
+      '/preview/products/keyboard',
+      '/preview/products/mouse',
     ]) {
       const response = await request.get(`/${locale}${route}`);
       expect(response.status()).toBe(200);
@@ -27,7 +27,7 @@ for (const locale of ['fa', 'en'] as const) {
       await expect(page.locator('.desktop-nav a[aria-current=page]')).toHaveCount(1);
       await expect(page.locator('header.store-header')).toHaveCount(1);
       await expect(page.locator('footer.store-footer')).toHaveCount(1);
-      if (['/collection', '/about', '/products/headphones'].includes(route)) {
+      if (['/collection', '/about', '/preview/products/headphones'].includes(route)) {
         await page.screenshot({
           path: `output/r02-v2/${locale}-${route.replaceAll('/', '-').slice(1)}.png`,
           fullPage: true,
@@ -37,7 +37,7 @@ for (const locale of ['fa', 'en'] as const) {
       }
     }
     await page.goto(`/${locale}/collection?category=workspace`);
-    await expect(page.locator('.object-card')).toHaveCount(1);
+    await expect(page.locator('.store-filters select')).toHaveValue('');
     await page.locator('.language-picker summary').click();
     await expect(page.locator('.language-picker nav .locale-flag')).toHaveCount(2);
     await page
@@ -48,14 +48,13 @@ for (const locale of ['fa', 'en'] as const) {
         url.pathname === `/${locale === 'fa' ? 'en' : 'fa'}/collection` &&
         url.searchParams.get('category') === 'workspace',
     );
-    await expect(page.locator('.object-card')).toHaveCount(1);
-    await page.locator('.object-image').first().click();
-    await expect(page).toHaveURL(/\/products\/keyboard$/);
+    await expect(page.locator('.store-filters')).toBeVisible();
+    await page.goto(`/${locale === 'fa' ? 'en' : 'fa'}/preview/products/keyboard`);
     await page.locator('.language-picker summary').click();
     await page
       .getByRole('link', { name: locale === 'fa' ? 'فارسی' : 'English', exact: true })
       .click();
-    await expect(page).toHaveURL(new RegExp(`/${locale}/products/keyboard$`));
+    await expect(page).toHaveURL(new RegExp(`/${locale}/preview/products/keyboard$`));
     await page.locator('.brand-link').first().click();
     await expect(page).toHaveURL(new RegExp(`/${locale}$`));
     expect((await request.get(`/${locale}/products/missing-item`)).status()).toBe(404);

@@ -4,7 +4,7 @@ import { test, expect } from '@playwright/test';
 for (const locale of ['fa', 'en'] as const) {
   test(`${locale}: standalone pages accessibility`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
-    for (const route of ['/collection', '/categories', '/about', '/products/headphones']) {
+    for (const route of ['/collection', '/categories', '/about', '/preview/products/headphones']) {
       await page.goto(`/${locale}${route}`);
       for (const mode of ['light', 'dark'] as const) {
         const name =

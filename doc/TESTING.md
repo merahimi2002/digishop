@@ -97,3 +97,10 @@ unit suite فعلی ۱۸ تست؛ regression مرورگر production ۲۳ تست
 ## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
 
 ۲۱ unit و ۳۲ integration (۲۰ داده + ۱۲ auth) پاس شدند. ۴ تست auth مرورگر production پورت3400 و همان ۴ تست dev پورت3500 با Edge پاس شدند: ثبت‌نام، ارسال دوباره تأیید، ورود، نام حساب، بازیابی، خروج، cache و مجوز. Axe روی فرم ورود در fa/en، تم روشن/تیره و عرض‌های320/390/768/1280 اجرا شد؛ خطای console/page ثبت‌شده صفر بود. ۲۳ تست پایه storefront production نیز در این تحویل پاس شده‌اند. workflow CI به تست‌های auth مجهز شد ولی اجرای remote این تغییرات هنوز مشاهده نشده است. تست SMTP خارجی انجام نشده.
+
+
+## R05 — محصول و فروشگاه، ۲۰۲۶/۱۱/۰۲
+
+پوشش جدید tests/unit/products.test.ts، tests/integration/products.test.ts و tests/auth-e2e/products.spec.ts است. واحد: BigInt/اعشار/overflow، نمایش تومان دقیق، ترجمه، ترکیب و انتشار. PostgreSQL: مجوز/origin، draft/publish/archive، دو زبان، ledger/audit، رزرو و stale edit، رقابت دو ویرایش، rollback، هویت variant و DTO عمومی. مرورگر: ساخت دو variant از فرم، انتشار، انتخاب تنوع ناموجود، تغییر زبان با نامک متفاوت، قیمت/موجودی تازه و بایگانی؛ axe و overflow در هر دو جهت/تم و۳ عرض.
+
+suite قدیمی طراحی برای مسیر جدید /preview/products تطبیق یافته است؛ /products دیگر fallback مفهومی ندارد. نتیجه نهایی فرمان‌ها در EXECUTION ثبت می‌شود. آزمون مرورگر و axe جای سخت‌افزار واقعی موبایل، screen reader دستی و CWV میدانی نیستند.

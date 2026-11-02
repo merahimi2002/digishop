@@ -87,6 +87,7 @@ for (const locale of ['fa', 'en'] as const) {
     await expect(page).toHaveURL(new RegExp('/' + locale + '/collection'));
     await page.goto('/' + locale);
     await page.emulateMedia({ reducedMotion: 'reduce' });
+    await expect(page.locator('.shop-hero')).toHaveCount(1);
     await page.locator('.shop-hero').scrollIntoViewIfNeeded();
     await expect(page.locator('.hero-photo')).toHaveCSS('transform', 'none');
     await expect(page.locator('.hero-photo img')).toHaveCSS('animation-name', 'none');

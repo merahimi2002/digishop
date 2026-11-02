@@ -56,3 +56,27 @@
 | GET /api/admin/access | permission کاتالوگ و تغییر رمز اولیه انجام‌شده |
 
 GET روی catch-all auth و مسیرهای خارج از allowlist برابر 404 هستند. جزئیات AUTH و API را رعایت کنید.
+
+## R05 — ساختار کاتالوگ، ۲۰۲۶/۱۰/۳۱
+
+مسیر اجرایی جدید: /api/admin/catalog/{categories|brands|attributes} با GET، POST، PATCH و DELETE. فقط ADMIN/OWNER دارای catalog:write، ایمیل تأییدشده و تغییر رمز اولیه انجام‌شده مجازند.
+
+- GET: q حداکثر۱۰۰ کاراکتر و page بین۱ و۱۰۰۰۰؛ ۳۰ ردیف، total/pages و category lookup.
+- POST: code، translations با همه localeهای تنظیمات؛ دسته parentId/slug/description؛ ویژگی kind/unit/categoryIds/choices.
+- PATCH و DELETE: id و revision اجباری‌اند. revision قدیمی 409 STALE_EDIT؛ کد/نامک تکراری 409 DUPLICATE؛ رابطه یا چرخه نامعتبر 409 CONFLICT؛ ورودی نامعتبر400، بی‌نشست401 و بدونمجوز403.
+- پاسخ همه روش‌ها private/no-store است. POST برابر201 و پاسخ mutation دارای item یا null برای حذف است. endpoint محصول و API عمومی فروشگاهی در این بخش ساخته نشده‌اند.
+
+
+## R05 — محصول و فروشگاه، ۲۰۲۶/۱۱/۰۲
+
+مسیر اجرایی محصول: /api/admin/catalog/products؛ GET، POST و PATCH. همان مجوز catalog:write، تأیید ایمیل، تغییر رمز، same-origin و rate limit کاتالوگ اعمال می‌شود. DELETE با 405 ARCHIVE_REQUIRED رد می‌شود؛ بایگانی با PATCH انجام می‌شود.
+
+- GET: q (نام یا SKU، حداکثر۱۰۰) و page (۱..۱۰۰۰۰)، ۲۰ محصول با ترجمه‌ها/گزینه‌ها/variant و revision، lookup دسته/برند تا۵۰۰.
+- POST/PATCH: categoryId، brandId یا null، status از DRAFT/PUBLISHED/ARCHIVED، isDemo، translations کامل fa/en با name/slug/description، options با code/translations/values و variants با sku/priceIrr/active/onHand/selections. انتخاب با {option: code, value: code} است. سقف۳ گزینه،۴۰ مقدار در هر گزینه و۱۰۰ variant؛ body حداکثر۲۵۶KiB.
+- priceIrr رشته ده‌دهی صحیح غیرمنفی تا سقف PostgreSQL BigInt است؛ عدد JSON/اعشار/نمای علمی پذیرفته نیست. SKU trim و uppercase می‌شود. انتشار حداقل یک variant فعال و قیمت مثبت برای تمام variantهای فعال می‌خواهد.
+- PATCH: id و revision و تمام variantهای موجود با id لازم‌اند. هویت ترکیب variant و ساختار کد گزینه/مقدار پس از ساخت ثابت است. غیرفعال‌سازی جایگزین حذف است؛ variant جدید با ترکیب استفاده‌نشده از گزینه‌های اولیه قابل افزودن است.
+- 409: STALE_EDIT، RESERVED_STOCK، OPTION_STRUCTURE، VARIANT_IDENTITY، REQUIRED_ATTRIBUTES یا DUPLICATE. اعتبارسنجی400، بدوننشست401، بدونمجوز403، محدودیت429؛ پاسخ‌ها private/no-store. POST=201، PATCH=200 و {item}.
+- endpoint عمومی JSON ساخته نشده؛ Server Componentهای خانه، دسته‌ها، /collection و /products/[slug] مستقیماً سرویس عمومی را می‌خوانند. این DTO وضعیت خصوصی، revision و reserved را منتشر نمی‌کند.
+
+
+قرارداد نهایی ۲۰۲۶/۱۱/۰۲: ثبات گزینه‌ها به معنی حفظ محورهای گزینه و کد مقدارهای موجود است. افزودن مقدار جدید به محور موجود و ساخت variant جدید برای آن در پنل/API مجاز است؛ حذف یا تغییر کد موجود و تغییر ترکیب variant ذخیره‌شده مجاز نیست. این قاعده بر عبارت‌های کلی «ساختار ثابت» در شرح اولیه همین مرحله اولویت دارد.

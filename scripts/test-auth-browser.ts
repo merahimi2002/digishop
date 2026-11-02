@@ -23,6 +23,7 @@ const result = spawnSync(
     'test',
     '--config=playwright.auth.config.ts',
     '--workers=1',
+    ...process.argv.slice(2).filter((argument) => argument !== '--dev'),
   ],
   { env: process.env, stdio: 'inherit' },
 );

@@ -153,3 +153,17 @@ inventory.ts primitive داخلی UPDATE شرطی و transaction برای reserv
 ## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
 
 src/server/auth شامل factory مستقل و قابل تست، mail، policy، HTTP allowlist و session سروری است؛ فایل‌های index/routes/session دارای مرز server-only هستند. Route Handlerهای Next نازک‌اند. فرم‌ها Zod مشترک، React Hook Form و TanStack Query با private key دارند؛ خروج و تغییر هویت cache خصوصی را پاک می‌کند. بررسی اولیه حساب و admin روی سرور و بررسی هر API روی سرور انجام می‌شود؛ UI مرز امنیتی نیست.
+
+## R05 — ساختار کاتالوگ، ۲۰۲۶/۱۰/۳۱
+
+src/server/catalog/service.ts تراکنش‌های دسته/برند/ویژگی، ترجمه، category scope و choice را نگه می‌دارد. HTTP adapter مستقل، قابل تست با PostgreSQL واقعی و دارای کنترل دسترسی است؛ Route Handler نازک است. mutationها advisory transaction lock مشترک دارند تا دو ویرایش parent به‌طور هم‌زمان چرخه نسازند. audit با همان تراکنش ثبت می‌شود و rollback شامل تمام ترجمه‌ها/روابط است. snapshot revision قبل از mutation بررسی می‌شود.
+
+
+## R05 — محصول و فروشگاه، ۲۰۲۶/۱۱/۰۲
+
+پنل محصول مسیر /[locale]/admin/products و API موجود کاتالوگ با resource=products را استفاده می‌کند. TanStack Query کلید private/products دارد و خروج R04 آن را پاک می‌کند. سرویس products برای نوشتن و storefront برای خواندن عمومی مستقل‌اند. صفحات عمومی با connection() در زمان درخواست از PostgreSQL می‌خوانند؛ کش بین درخواست‌ها یا fallback به داده مفهومی ندارند. cache() در جزئیات فقط تکرار query در همان render/metadata را حذف می‌کند.
+
+خانه بخش کاتالوگ واقعی دارد؛ تصاویر و dialogهای مفهومی با برچسب پیش‌نمایش باقی‌اند و مسیر جزئیاتشان /preview/products/[slug] با noindex است. /collection و /categories از داده منتشرشده می‌خوانند؛ جزئیات draft/archive به notFound می‌رود. تغییر زبان نامک ترجمه متناظر را resolve می‌کند؛ هیچ تبدیل ارز خارجی انجام نمی‌شود.
+
+
+قرارداد نهایی ۲۰۲۶/۱۱/۰۲: ثبات گزینه‌ها به معنی حفظ محورهای گزینه و کد مقدارهای موجود است. افزودن مقدار جدید به محور موجود و ساخت variant جدید برای آن در پنل/API مجاز است؛ حذف یا تغییر کد موجود و تغییر ترکیب variant ذخیره‌شده مجاز نیست. این قاعده بر عبارت‌های کلی «ساختار ثابت» در شرح اولیه همین مرحله اولویت دارد.

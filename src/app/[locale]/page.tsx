@@ -8,12 +8,19 @@ import { ArrowUpRight } from 'lucide-react';
 import { ConceptCollection } from '@/components/concept-collection';
 import { routing } from '@/i18n/routing';
 import { Link } from '@/i18n/navigation';
+import { connection } from 'next/server';
+import { getDatabase } from '@/server/database/client';
+import { readStorefront, storefrontQuery } from '@/server/catalog/storefront';
+import { StoreProducts } from '@/components/catalog/store-products';
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
   const t = await getTranslations('Shop');
+  const catalog = await getTranslations('StoreCatalog');
+  await connection();
+  const products = await readStorefront(getDatabase(), locale, storefrontQuery.parse({}));
   return (
     <main id="main" tabIndex={-1}>
       <section className="shop-hero shell" aria-labelledby="hero-title">
@@ -42,6 +49,17 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
           </div>
         </div>
       </section>
+      <section className="shell home-catalog" aria-labelledby="live-catalog-heading">
+        <h2 id="live-catalog-heading">{catalog('title')}</h2>
+        <StoreProducts items={products.items.slice(0, 4)} locale={locale} />
+        <Link href="/collection" className="editorial-link">
+          {catalog('viewCatalog')}
+        </Link>
+      </section>
+      <aside className="shell preview-notice">
+        <h2>{catalog('preview')}</h2>
+        <p>{catalog('previewHelp')}</p>
+      </aside>
       <ConceptCollection />
       <section
         className="perspective-section shell"

@@ -32,7 +32,7 @@ for (const locale of ['fa', 'en'])
     expect(panel.x).toBeGreaterThanOrEqual(390 * 0.05 - 1);
     expect(panel.x + panel.width).toBeLessThanOrEqual(390 * 0.95 + 1);
     await page.keyboard.press('Escape');
-    await page.goto(`/${locale}/products/keyboard`);
+    await page.goto(`/${locale}/preview/products/keyboard`);
     await expect(page.locator('.desktop-nav a[aria-current=page]')).toHaveAttribute(
       'href',
       `/${locale}/collection`,

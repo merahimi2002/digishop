@@ -34,3 +34,12 @@ client سروری و lazy، app-role غیرمالک و فاقد CREATE، عدم 
 ## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
 
 R04: allowlist endpoint، Origin دقیق، JSON محدود، password hashing کتابخانه، کوکی HttpOnly/SameSite/Secure HTTPS، session revocation و بررسی نقش تازه اجرایی‌اند. rate limit دیتابیسی ایمیل نرمال‌شده و bucket مشترک مسیر در برابر XFF جعلی تست شده است. identifier توکن هش و هدف‌دار است؛ مصرف اتمیک، انقضا، پاسخ عمومی ایمیل و عدم افشای session token تست شده‌اند. حساب مالک رمز تصادفی محلی، تأیید ایمیل و تغییر رمز اجباری دارد. این شواهد ممیزی امنیت مستقل یا تأیید سرویس SMTP نیستند.
+
+## R05 — ساختار کاتالوگ، ۲۰۲۶/۱۰/۳۱
+
+API ساختار کاتالوگ فقط با session معتبر، نقش تازه و تغییر رمز اولیه انجام‌شده باز است؛ نقش/actor از body پذیرفته نمی‌شود. JSON محدود۶۴ KiB، validation مشترک، Origin دقیق و rate limit در سرور اعمال می‌شوند. شناسه choice خارجی، دور دسته‌بندی، stale revision و تغییر نوع ویژگی رد می‌شوند. audit فقط actor/action/entity را ثبت می‌کند. مجوز UI جای کنترل API نیست.
+
+
+## R05 — محصول و فروشگاه، ۲۰۲۶/۱۱/۰۲
+
+API محصول تحت کنترل مجوز و same-origin کاتالوگ قرار دارد؛ client نمی‌تواند actor، reserved یا inventoryVersion را تعیین کند. revision قدیمی، SKU تکراری پس از uppercase، جابه‌جایی ترکیب یا شناسه خارجی variant، کاهش زیر رزرو و قیمت نامعتبر رد می‌شوند. تراکنش، قیدهای دیتابیس، CAS و ledger یکپارچگی مالی را حفظ می‌کنند. فقط PUBLISHED با variant فعال در سرویس عمومی خوانده می‌شود؛ DRAFT/ARCHIVED، حتی با نامک مستقیم، عمومی نیستند. محتوای متنی React escape می‌شود و HTML خام نمایش داده نمی‌شود. upload/storage در T03 باقی است؛ این تحویل تأیید ممیزی امنیت جامع یا مجوز انتشار production نیست.

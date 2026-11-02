@@ -51,7 +51,8 @@ export function StoreMobileMenu() {
             href={item.href}
             aria-current={
               pathname === item.href ||
-              (item.href === '/collection' && pathname.startsWith('/products/'))
+              (item.href === '/collection' &&
+                (pathname.startsWith('/products/') || pathname.startsWith('/preview/products/')))
                 ? 'page'
                 : undefined
             }

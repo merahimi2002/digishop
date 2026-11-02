@@ -162,7 +162,7 @@ export function ConceptCollection({
               <article className="object-card" key={product.id}>
                 <Link
                   className={`object-image object-${product.id}`}
-                  href={`/products/${product.id}`}
+                  href={`/preview/products/${product.id}`}
                   aria-label={`${t('viewObject')} — ${t(`products.${product.id}.name`)}`}
                 >
                   <span className="object-badge">{t('concept')}</span>
@@ -180,7 +180,9 @@ export function ConceptCollection({
                 <div className="object-info">
                   <p>{t(`products.${product.id}.type`)}</p>
                   <h3>
-                    <Link href={`/products/${product.id}`}>{t(`products.${product.id}.name`)}</Link>
+                    <Link href={`/preview/products/${product.id}`}>
+                      {t(`products.${product.id}.name`)}
+                    </Link>
                   </h3>
                   <div className="object-meta">
                     <span>{t(`products.${product.id}.material`)}</span>

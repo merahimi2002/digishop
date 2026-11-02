@@ -25,3 +25,12 @@ endpointهای upload و AI محدودیت اندازه، زمان و نرخ د�
 ## پیشرفت R04 — ۲۰۲۶/۱۰/۳۱
 
 R04 از envelope محدود {ok:true} برای موفقیت auth و {error:code} برای خطا استفاده می‌کند؛ Bearer/session token در JSON برنمی‌گردد. کدهای AUTH_FAILED، RATE_LIMITED و SESSION_EXPIRED عمداً عمومی‌اند. همه پاسخ‌های خصوصی Cache-Control: private,no-store دارند. نوشتن نیازمند Origin دقیق، JSON و سقف ۸ KiB است. callbackURL ارسالی کلاینت پذیرفته نمی‌شود. فهرست مسیر اجرایی در API_ENDPOINT است؛ استاندارد پیشنهادی API تجاری برای R05+ باقی است.
+
+## R05 — ساختار کاتالوگ، ۲۰۲۶/۱۰/۳۱
+
+API کاتالوگ R05 حداکثر۶۴ KiB JSON را به‌صورت streaming می‌پذیرد؛ auth همچنان۸ KiB است. نوشتن Origin دقیق، permission تازه و rate limit۶۰ mutation در دقیقه برای هر actor دارد. GET بدون تغییر و دارای no-store است. revision هش DTO نرمال‌شده برای جلوگیری از overwrite است و credential محسوب نمی‌شود. جست‌وجو و pagination سروری‌اند؛ منابع مجاز allowlist شده‌اند.
+
+
+## R05 — محصول و فروشگاه، ۲۰۲۶/۱۱/۰۲
+
+قرارداد محصول در API_ENDPOINT اجرایی شد. منطق مالی و انتشار در src/server/catalog/products.ts مستقل از HTTP/UI است. validation پیش از تراکنش و دوباره در سرویس اجرا می‌شود؛ actor فقط از نشست سرور گرفته می‌شود. GET عمومی از طریق Server Components و DTO مستقل انجام می‌شود؛ ورودی فهرست q/category/page اعتبارسنجی می‌شود. قیمت و موجودی مرورگر مرجع خرید نیستند؛ quote/checkout در R06 باقی است.

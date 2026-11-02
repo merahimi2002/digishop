@@ -13,7 +13,7 @@ export function privateJson(body: unknown, status = 200, headers?: Headers) {
   next.set('Referrer-Policy', 'no-referrer');
   return Response.json(body, { status, headers: next });
 }
-async function bodyJson(request: Request) {
+export async function bodyJson(request: Request, maxBytes = 8192) {
   if (request.headers.get('content-type')?.split(';')[0] !== 'application/json')
     throw new Error('JSON required');
   const reader = request.body?.getReader();
@@ -24,7 +24,7 @@ async function bodyJson(request: Request) {
     const { done, value } = await reader.read();
     if (done) break;
     size += value.length;
-    if (size > 8192) {
+    if (size > maxBytes) {
       await reader.cancel();
       throw new Error('Body too large');
     }
